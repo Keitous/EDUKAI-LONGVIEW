@@ -1,0 +1,32 @@
+﻿{
+  "learners": [
+    {
+      "id": "LRN001",
+      "name": "Aminata Camara",
+      "country": "Guinea",
+      "records": [
+        {
+          "year": "2023-2024",
+          "mathematics": 58,
+          "science": 64,
+          "language": 72,
+          "attendance": 88
+        },
+        {
+          "year": "2024-2025",
+          "mathematics": 71,
+          "science": 69,
+          "language": 74,
+          "attendance": 91
+        },
+        {
+          "year": "2025-2026",
+          "mathematics": 83,
+          "science": 76,
+          "language": 75,
+          "attendance": 93
+        }
+      ]
+    }
+  ]
+}
