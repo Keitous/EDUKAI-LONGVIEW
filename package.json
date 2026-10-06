@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "test": "npm run test:evaluation && npm run test:evidence && npm run test:audit && npm run test:safety",
+  "test:evaluation": "node tests/test-evaluation.js",
+  "test:evidence": "node tests/test-evidence.js",
+  "test:audit": "node tests/test-audit.js",
+  "test:safety": "node tests/test-response-safety.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

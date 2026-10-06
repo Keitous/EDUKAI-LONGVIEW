@@ -4,7 +4,14 @@ const {
   StdioClientTransport
 } = require("@modelcontextprotocol/sdk/client/stdio.js");
 const { getLLMConfig } = require("./llm-config");
-
+const {
+  createAuditSession,
+  addAuditEvent,
+  saveAuditSession
+} = require("./audit-logger");
+const {
+  checkResponseSafety
+} = require("./response-safety");
 function mcpToolsToGroq(mcpTools) {
   return mcpTools
     /*
@@ -25,7 +32,19 @@ function mcpToolsToGroq(mcpTools) {
 
 async function runLLMAgent(question) {
   const config = getLLMConfig();
+const auditSession = createAuditSession({
+  question,
+  provider: config.provider,
+  model: config.model
+});
 
+addAuditEvent(
+  auditSession,
+  "agent_started",
+  {
+    humanReviewRequired: true
+  }
+);
   if (!config.configured) {
     throw new Error("LLM configuration is incomplete.");
   }
@@ -198,6 +217,47 @@ Unless a schedule is present in retrieved evidence or explicitly
 provided by the user, say that follow-up timing should be
 determined by the teacher.
 
+19C. A learner's improvement does NOT prove that a teaching
+     strategy, intervention, support, teacher action, or other
+     external factor caused that improvement.
+
+     Unless an MCP tool explicitly provides causal evidence,
+     NEVER write or imply statements such as:
+     - "the strategy is working",
+     - "the support is producing results",
+     - "the intervention caused the improvement",
+     - "current practices are bearing fruit",
+     or equivalent causal claims in any language.
+
+     Instead, describe only the observed change.
+
+19D. Never invent a monitoring schedule.
+
+     Do NOT propose specific timing such as:
+     - every week,
+     - every month,
+     - every two months,
+     - every term or trimester,
+     - at the end of the semester,
+     unless that timing was explicitly provided by the user
+     or retrieved through an MCP tool.
+
+     If follow-up may be useful, say that the teacher should
+     determine an appropriate follow-up schedule.
+
+19E. Before producing the final answer, perform a safety
+     self-check:
+
+     - Did I infer a cause not present in MCP evidence?
+     - Did I invent a comparison or benchmark?
+     - Did I invent an intervention duration or frequency?
+     - Did I fill in missing learner data?
+     - Did I imply that a recommendation was approved or
+       executed?
+
+     If the answer to any question is yes, rewrite the
+     response before returning it.
+	 
 20. Never claim that a recommendation has been approved,
     implemented, scheduled, or communicated.
 
@@ -284,6 +344,66 @@ THE TEACHER DECIDES.
         !assistantMessage.tool_calls ||
         assistantMessage.tool_calls.length === 0
       ) {
+		  const safetyCheck =
+  checkResponseSafety(
+    assistantMessage.content
+  );
+
+if (!safetyCheck.safe) {
+  console.log(
+    "\n[RESPONSE SAFETY] Final response rejected."
+  );
+
+  for (
+    const violation of
+    safetyCheck.violations
+  ) {
+    console.log(
+      `[SAFETY VIOLATION] ${violation.type}`
+    );
+  }
+
+  addAuditEvent(
+    auditSession,
+    "response_safety_rejected",
+    {
+      step,
+      violations:
+        safetyCheck.violations.map(
+          (item) => item.type
+        )
+    }
+  );
+
+  messages.push({
+    role: "user",
+    content: `
+Your previous draft was rejected by the deterministic
+EDUKAI LongView response-safety layer.
+
+Detected violations:
+${safetyCheck.violations
+  .map(
+    (item) =>
+      `- ${item.type}: ${item.message}`
+  )
+  .join("\n")}
+
+Rewrite the answer now.
+
+Requirements:
+- Preserve only evidence supported by MCP results.
+- Remove unsupported causal claims.
+- Remove invented monitoring schedules or timelines.
+- Do not invent replacement facts.
+- Keep recommendations optional.
+- Teacher review remains required.
+- Answer in the same language as the original user question.
+`
+  });
+
+  continue;
+}
         console.log(
           "\n=== FINAL AGENT RESPONSE ==="
         );
@@ -303,7 +423,19 @@ THE TEACHER DECIDES.
         console.log(
           "Teacher review remains required."
         );
+addAuditEvent(
+  auditSession,
+  "agent_completed",
+  {
+    finalResponse: assistantMessage.content,
+    humanReviewRequired: true
+  }
+);
 
+saveAuditSession(
+  auditSession,
+  "completed"
+);
         return assistantMessage.content;
       }
 
@@ -351,7 +483,15 @@ THE TEACHER DECIDES.
         console.log(
           `[ARGUMENTS] ${JSON.stringify(args)}`
         );
-
+addAuditEvent(
+  auditSession,
+  "mcp_tool_called",
+  {
+    step,
+    tool: toolName,
+    arguments: args
+  }
+);
         const toolResult =
           await mcpClient.callTool({
             name: toolName,
@@ -393,7 +533,15 @@ THE TEACHER DECIDES.
             `[MCP RESULT RECEIVED] ${toolName}`
           );
         }
-
+addAuditEvent(
+  auditSession,
+  "mcp_tool_result",
+  {
+    step,
+    tool: toolName,
+    success: !toolResult.isError
+  }
+);
         messages.push({
           role: "tool",
           tool_call_id: toolCall.id,
