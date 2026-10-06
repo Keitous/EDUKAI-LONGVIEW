@@ -1,10 +1,17 @@
 ﻿const Groq = require("groq-sdk");
 const { Client } = require("@modelcontextprotocol/sdk/client/index.js");
-const { StdioClientTransport } = require("@modelcontextprotocol/sdk/client/stdio.js");
+const {
+  StdioClientTransport
+} = require("@modelcontextprotocol/sdk/client/stdio.js");
 const { getLLMConfig } = require("./llm-config");
 
 function mcpToolsToGroq(mcpTools) {
   return mcpTools
+    /*
+     * Structural Human-in-the-Loop boundary:
+     * the LLM can analyze and recommend,
+     * but it cannot submit a teacher decision.
+     */
     .filter((tool) => tool.name !== "submit_teacher_review")
     .map((tool) => ({
       type: "function",
@@ -24,7 +31,9 @@ async function runLLMAgent(question) {
   }
 
   if (config.provider !== "groq") {
-    throw new Error("This agent currently requires the Groq provider.");
+    throw new Error(
+      "This agent currently requires the Groq provider."
+    );
   }
 
   const groq = new Groq({
@@ -45,12 +54,20 @@ async function runLLMAgent(question) {
 
   try {
     const availableTools = await mcpClient.listTools();
-    const groqTools = mcpToolsToGroq(availableTools.tools);
 
-    console.log("\n=== EDUKAI AFRICA - LLM + MCP AGENT ===");
+    const groqTools = mcpToolsToGroq(
+      availableTools.tools
+    );
+
+    console.log(
+      "\n=== EDUKAI AFRICA - LLM + MCP AGENT ==="
+    );
     console.log(`Question: ${question}`);
 
-    console.log("\n[MCP TOOLS AVAILABLE TO LLM]");
+    console.log(
+      "\n[MCP TOOLS AVAILABLE TO LLM]"
+    );
+
     for (const tool of groqTools) {
       console.log(`- ${tool.function.name}`);
     }
@@ -59,24 +76,173 @@ async function runLLMAgent(question) {
       {
         role: "system",
         content: `
-You are EDUKAI AFRICA LongView Agent, an educational decision-support assistant.
+You are EDUKAI AFRICA LongView Agent, an educational
+decision-support assistant.
 
-Your role is to help teachers understand learner development over time.
+Your role is to help teachers understand learner
+development over time using evidence retrieved through
+MCP tools.
 
-You have access to MCP tools.
+You are NOT an autonomous educational decision-maker.
 
-Important rules:
-1. Use tools when learner data or evidence is required.
-2. Do not invent learner records.
-3. Base conclusions on retrieved evidence.
-4. When identifying a strength or difficulty, retrieve supporting evidence.
-5. You may recommend educational follow-up, but you must never make a consequential educational decision.
-6. A teacher must review recommendations before action.
-7. Do not claim that a teacher approved anything unless a real human review occurred.
-8. Answer in the same language as the user's question.
-9. Be concise, clear, and explain the evidence behind your conclusion.
-10. Never infer causes, teaching strategies, interventions, diagnoses, or contextual explanations unless they are explicitly present in retrieved evidence.
-11. Clearly distinguish observed evidence from recommendations. A recommendation must never be presented as an explanation of why a past improvement occurred.
+==============================
+CORE EVIDENCE RULES
+==============================
+
+1. Use MCP tools whenever learner-specific data or
+   evidence is required.
+
+2. Never invent, estimate, interpolate, or assume a
+   learner record that was not returned by a tool.
+
+3. Base learner-specific conclusions only on evidence
+   actually returned by the MCP tools.
+
+4. When identifying a strength or persistent difficulty,
+   retrieve supporting evidence when needed.
+
+5. Never invent comparison data.
+
+   In particular, NEVER claim that a learner is above or
+   below:
+   - a class average,
+   - a school average,
+   - a national average,
+   - a benchmark,
+   - an expected level,
+   - another learner,
+   unless that comparison value was explicitly returned
+   by an MCP tool.
+
+6. A score threshold produced by the LongView analysis
+   may be reported as a rule used by the system, but it
+   must NOT be presented as a class, school, national,
+   or pedagogical norm unless such a norm exists in the
+   retrieved evidence.
+
+==============================
+DATA QUALITY AND UNCERTAINTY
+==============================
+
+7. Respect dataComplete, missingYears,
+   observationsUsed, and confidence when these fields
+   are returned by a tool.
+
+8. Never replace missing data with invented values.
+
+9. If confidence is "limited", explicitly explain that
+   the conclusion is based only on the available
+   observations.
+
+10. If confidence is "insufficient", do not present a
+    longitudinal conclusion as established.
+
+11. Do not describe incomplete observations as proving
+    continuous improvement or continuous decline.
+
+==============================
+NO UNSUPPORTED CAUSAL CLAIMS
+==============================
+
+12. Never infer why a learner improved or declined unless
+    the cause is explicitly present in retrieved evidence.
+
+13. Do not infer diagnoses, family circumstances,
+    motivation, teaching quality, socioeconomic causes,
+    learning disorders, or contextual explanations from
+    scores alone.
+
+14. A correlation or temporal change must never be
+    presented as a proven cause.
+
+==============================
+RECOMMENDATION SAFETY
+==============================
+
+15. You may propose cautious educational follow-up when
+    the user requests recommendations.
+
+16. Clearly separate:
+    A. OBSERVED EVIDENCE
+    B. INTERPRETATION
+    C. OPTIONAL RECOMMENDATION
+
+17. Recommendations are suggestions for teacher review,
+    not factual findings about the learner.
+
+18. Unless supported by retrieved evidence, do NOT invent
+    precise intervention parameters such as:
+    - number of minutes,
+    - number of sessions,
+    - group size,
+    - number of weeks,
+    - testing frequency,
+    - target percentage,
+    - deadlines,
+    - specific diagnosis,
+    - specific remedial curriculum.
+
+19. When evidence does not support a precise intervention,
+    use cautious language such as:
+    "The teacher may consider..."
+    "A possible next step is..."
+    "Additional assessment may help determine..."
+
+19A. When suggesting additional investigation, do not propose
+specific possible causes that are absent from the retrieved
+evidence. Ask the teacher to gather relevant contextual
+information without naming hypothetical causes.
+
+19B. Do not invent a precise follow-up frequency or timeline.
+Unless a schedule is present in retrieved evidence or explicitly
+provided by the user, say that follow-up timing should be
+determined by the teacher.
+
+20. Never claim that a recommendation has been approved,
+    implemented, scheduled, or communicated.
+
+==============================
+HUMAN-IN-THE-LOOP
+==============================
+
+21. You may recommend educational follow-up, but you must
+    never make or execute a consequential educational
+    decision.
+
+22. A teacher must review recommendations before action.
+
+23. Never claim that a teacher approved anything unless
+    a real human review occurred.
+
+24. The submit_teacher_review capability is reserved for
+    an explicit human-facing review workflow and must
+    never be simulated by the LLM.
+
+==============================
+RESPONSE QUALITY
+==============================
+
+25. Answer in the same language as the user's question.
+
+26. Be concise, clear, and evidence-based.
+
+27. Clearly distinguish retrieved facts from your
+    recommendations.
+
+28. If requested information is unavailable, say that it
+    is unavailable instead of guessing.
+
+29. If a tool reports an error or that a learner does not
+    exist, do not invent substitute learner information.
+
+30. Never present a recommendation as an explanation for
+    why a past improvement or decline occurred.
+
+Remember:
+OBSERVE from evidence.
+INTERPRET cautiously.
+RECOMMEND optionally.
+THE TEACHER DECIDES.
 `
       },
       {
@@ -87,41 +253,79 @@ Important rules:
 
     const maxSteps = 8;
 
-    for (let step = 1; step <= maxSteps; step++) {
-      console.log(`\n[AGENT STEP ${step}] Asking LLM...`);
+    for (
+      let step = 1;
+      step <= maxSteps;
+      step++
+    ) {
+      console.log(
+        `\n[AGENT STEP ${step}] Asking LLM...`
+      );
 
-      const completion = await groq.chat.completions.create({
-        model: config.model,
-        messages,
-        tools: groqTools,
-        tool_choice: "auto",
-        temperature: 0
-      });
+      const completion =
+        await groq.chat.completions.create({
+          model: config.model,
+          messages,
+          tools: groqTools,
+          tool_choice: "auto",
+          temperature: 0
+        });
 
-      const assistantMessage = completion.choices[0].message;
+      const assistantMessage =
+        completion.choices[0].message;
 
       messages.push(assistantMessage);
 
+      /*
+       * No tool call means the agent has completed
+       * its reasoning and produced its final answer.
+       */
       if (
         !assistantMessage.tool_calls ||
         assistantMessage.tool_calls.length === 0
       ) {
-        console.log("\n=== FINAL AGENT RESPONSE ===");
-        console.log(assistantMessage.content);
+        console.log(
+          "\n=== FINAL AGENT RESPONSE ==="
+        );
 
-        console.log("\n=== HUMAN-IN-THE-LOOP ===");
+        console.log(
+          assistantMessage.content
+        );
+
+        console.log(
+          "\n=== HUMAN-IN-THE-LOOP ==="
+        );
+
         console.log(
           "No consequential educational action was executed automatically."
         );
-        console.log("Teacher review remains required.");
+
+        console.log(
+          "Teacher review remains required."
+        );
 
         return assistantMessage.content;
       }
 
-      for (const toolCall of assistantMessage.tool_calls) {
-        const toolName = toolCall.function.name;
+      for (
+        const toolCall of
+        assistantMessage.tool_calls
+      ) {
+        const toolName =
+          toolCall.function.name;
 
-        if (toolName === "submit_teacher_review") {
+        /*
+         * Defense-in-depth.
+         *
+         * submit_teacher_review is already filtered
+         * from the tools exposed to the LLM.
+         * This second check protects the boundary
+         * even if the filtering logic changes later.
+         */
+        if (
+          toolName ===
+          "submit_teacher_review"
+        ) {
           throw new Error(
             "Safety boundary: submit_teacher_review cannot be called autonomously by the LLM."
           );
@@ -130,28 +334,65 @@ Important rules:
         let args;
 
         try {
-          args = JSON.parse(toolCall.function.arguments || "{}");
+          args = JSON.parse(
+            toolCall.function.arguments ||
+              "{}"
+          );
         } catch {
           throw new Error(
             `Invalid tool arguments generated for ${toolName}.`
           );
         }
 
-        console.log(`[LLM DECISION] Call MCP tool: ${toolName}`);
-        console.log(`[ARGUMENTS] ${JSON.stringify(args)}`);
+        console.log(
+          `[LLM DECISION] Call MCP tool: ${toolName}`
+        );
 
-        const toolResult = await mcpClient.callTool({
-          name: toolName,
-          arguments: args
-        });
+        console.log(
+          `[ARGUMENTS] ${JSON.stringify(args)}`
+        );
 
-        const textParts = (toolResult.content || [])
-          .filter((item) => item.type === "text")
-          .map((item) => item.text);
+        const toolResult =
+          await mcpClient.callTool({
+            name: toolName,
+            arguments: args
+          });
 
-        const toolText = textParts.join("\n");
+        const textParts =
+          (toolResult.content || [])
+            .filter(
+              (item) =>
+                item.type === "text"
+            )
+            .map(
+              (item) => item.text
+            );
 
-        console.log(`[MCP RESULT RECEIVED] ${toolName}`);
+        let toolText =
+          textParts.join("\n");
+
+        /*
+         * Explicitly tell the LLM when MCP reported
+         * an error. This prevents a failed lookup
+         * from being interpreted as valid evidence.
+         */
+        if (toolResult.isError) {
+          toolText = JSON.stringify({
+            toolError: true,
+            tool: toolName,
+            message:
+              toolText ||
+              "The MCP tool returned an error."
+          });
+
+          console.log(
+            `[MCP TOOL ERROR] ${toolName}`
+          );
+        } else {
+          console.log(
+            `[MCP RESULT RECEIVED] ${toolName}`
+          );
+        }
 
         messages.push({
           role: "tool",
@@ -173,9 +414,16 @@ const question =
   process.argv.slice(2).join(" ") ||
   "Analyse l'évolution de l'apprenant LRN001 et explique sa principale force émergente avec les preuves.";
 
-runLLMAgent(question).catch((error) => {
-  console.error("\nLLM AGENT FAILED:");
-  console.error(error.message || error);
-  process.exit(1);
-});
+runLLMAgent(question).catch(
+  (error) => {
+    console.error(
+      "\nLLM AGENT FAILED:"
+    );
 
+    console.error(
+      error.message || error
+    );
+
+    process.exit(1);
+  }
+);
