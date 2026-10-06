@@ -558,20 +558,26 @@ addAuditEvent(
   }
 }
 
-const question =
-  process.argv.slice(2).join(" ") ||
-  "Analyse l'évolution de l'apprenant LRN001 et explique sa principale force émergente avec les preuves.";
+if (require.main === module) {
+  const question =
+    process.argv.slice(2).join(" ") ||
+    "Analyse l'évolution de l'apprenant LRN001 et explique sa principale force émergente avec les preuves.";
 
-runLLMAgent(question).catch(
-  (error) => {
-    console.error(
-      "\nLLM AGENT FAILED:"
-    );
+  runLLMAgent(question).catch(
+    (error) => {
+      console.error(
+        "\nLLM AGENT FAILED:"
+      );
 
-    console.error(
-      error.message || error
-    );
+      console.error(
+        error.message || error
+      );
 
-    process.exit(1);
-  }
-);
+      process.exit(1);
+    }
+  );
+}
+
+module.exports = {
+  runLLMAgent
+};

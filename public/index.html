@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>EDUKAI AFRICA - LongView Agent</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header>
+    <h1>EDUKAI AFRICA</h1>
+    <h2>LongView Agent</h2>
+
+    <p>
+      Intelligence longitudinale pour accompagner
+      les enseignants dans le suivi des apprenants.
+    </p>
+
+    <button id="languageButton">
+      English
+    </button>
+  </header>
+
+  <main>
+    <section>
+      <h2>Analyse longitudinale</h2>
+
+      <label for="learnerSelect">
+        Apprenant
+      </label>
+
+      <select id="learnerSelect">
+        <option value="">
+          Sélectionner un apprenant
+        </option>
+      </select>
+
+      <label for="question">
+        Question à LongView
+      </label>
+
+      <textarea
+        id="question"
+        rows="5"
+        placeholder="Ex. Analyse l'évolution de cet apprenant et identifie ses principales forces."
+      ></textarea>
+
+      <button id="analyzeButton">
+        Analyser avec LongView
+      </button>
+    </section>
+
+    <section id="resultSection">
+      <h2>Résultat de l'analyse</h2>
+
+      <div id="result">
+        Aucune analyse effectuée.
+      </div>
+    </section>
+
+    <section id="teacherReviewSection">
+      <h2>Décision de l'enseignant</h2>
+
+      <p>
+        LongView fournit une aide à la décision.
+        La décision finale appartient à l'enseignant.
+      </p>
+
+      <textarea
+        id="teacherComment"
+        rows="4"
+        placeholder="Commentaire de l'enseignant..."
+      ></textarea>
+
+      <div>
+        <button id="approveButton">
+          Approuver
+        </button>
+
+        <button id="modifyButton">
+          Modifier
+        </button>
+
+        <button id="rejectButton">
+          Rejeter
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      EDUKAI AFRICA - LongView Agent
+      | Human-in-the-Loop
+      | Synthetic learner data
+    </p>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
