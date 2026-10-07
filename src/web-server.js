@@ -147,7 +147,7 @@ app.post(
       const responseLanguageInstruction =
         language === "en"
           ? "Respond entirely in English, including headings, table headers, evidence explanations and recommendations."
-          : "Réponds entièrement en français, y compris les titres, les en-têtes des tableaux, les explications des preuves et les recommandations.";
+          : "Réponds entièrement en français, y compris les titres, les en-têtes des tableaux, les explications des preuves et les recommandations. Dans les textes destinés à l'enseignant, traduis systématiquement les valeurs techniques de tendance : improving = en amélioration ; stable = stable ; declining = en régression ; insufficient_data = données insuffisantes. Ne présente jamais ces codes anglais bruts dans les phrases françaises. Conserve les valeurs techniques originales dans les données structurées et ne modifie aucune preuve.";
       const agentQuestion =
         `${question}
 
