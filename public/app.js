@@ -1,4 +1,4 @@
-﻿function escapeHtml(text) {
+function escapeHtml(text) {
   return String(text)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -136,7 +136,7 @@ safeText =
       "<li>$1</li>"
     );
 
-  // Regrouper les Ã©lÃ©ments de liste consÃ©cutifs
+  // Regrouper les éléments de liste consécutifs
   safeText =
     safeText.replace(
       /(?:<li>.*?<\/li>\n?)+/gs,
@@ -144,7 +144,7 @@ safeText =
         `<ul>${list}</ul>`
     );
 
-  // Paragraphes / retours Ã  la ligne
+  // Paragraphes / retours à la ligne
   safeText =
     safeText.replace(
       /\n{2,}/g,
@@ -236,6 +236,210 @@ const modifyButton =
 const rejectButton =
   document.getElementById("rejectButton");
 
+const languageButton =
+  document.getElementById("languageButton");
+
+const headerDescription =
+  document.getElementById("headerDescription");
+const analysisTitle =
+  document.getElementById("analysisTitle");
+const learnerLabel =
+  document.getElementById("learnerLabel");
+const questionLabel =
+  document.getElementById("questionLabel");
+const resultTitle =
+  document.getElementById("resultTitle");
+const reviewTitle =
+  document.getElementById("reviewTitle");
+const reviewDescription =
+  document.getElementById("reviewDescription");
+
+let currentLanguage = "fr";
+
+const uiTranslations = {
+  fr: {
+    switchLanguage: "English",
+    headerDescription:
+      "Intelligence longitudinale pour accompagner les enseignants dans le suivi des apprenants.",
+    analysisTitle: "Analyse longitudinale",
+    learnerLabel: "Apprenant",
+    selectLearner: "Sélectionner un apprenant",
+    questionLabel: "Question à LongView",
+    questionPlaceholder:
+      "Ex. Analyse l'évolution de cet apprenant et identifie ses principales forces.",
+    analyzeButton: "Analyser avec LongView",
+    analyzingButton: "Analyse en cours...",
+    analyzingMessage:
+      "LongView analyse les données longitudinales...",
+    selectLearnerError:
+      "Veuillez sélectionner un apprenant.",
+    questionRequiredError:
+      "Veuillez saisir une question pour LongView.",
+    analysisFailed:
+      "LongView n'a pas pu terminer l'analyse. Veuillez réessayer.",
+    resultTitle: "Résultat de l'analyse",
+    emptyResult: "Aucune analyse effectuée.",
+    reviewTitle: "Décision de l'enseignant",
+    reviewDescription:
+      "LongView fournit une aide à la décision. La décision finale appartient à l'enseignant.",
+    commentPlaceholder:
+      "Commentaire de l'enseignant...",
+    approve: "Approuver",
+    modify: "Modifier",
+    reject: "Rejeter",
+    reviewNoLearner:
+      "Veuillez sélectionner un apprenant.",
+    reviewNoAnalysis:
+      "Veuillez d'abord effectuer une analyse LongView.",
+    reviewNoAnalysisId:
+      "La référence de l'analyse est manquante. Veuillez effectuer une nouvelle analyse.",
+    reviewLearnerMismatch:
+      "L'apprenant sélectionné ne correspond pas à l'analyse affichée. Veuillez effectuer une nouvelle analyse.",
+    reviewModificationComment:
+      "Veuillez expliquer la modification dans le commentaire de l'enseignant.",
+    approvedLabel:
+      "Recommandation approuvée",
+    modifiedLabel:
+      "Recommandation modifiée",
+    rejectedLabel:
+      "Recommandation rejetée",
+    referenceLabel:
+      "Référence",
+    reviewSaved:
+      "La décision humaine a été enregistrée.",
+    reviewFailed:
+      "Impossible d'enregistrer la décision de l'enseignant."
+  },
+
+  en: {
+    switchLanguage: "Français",
+    headerDescription:
+      "Longitudinal intelligence to support teachers in monitoring learner progress.",
+    analysisTitle: "Longitudinal Analysis",
+    learnerLabel: "Learner",
+    selectLearner: "Select a learner",
+    questionLabel: "Question for LongView",
+    questionPlaceholder:
+      "Example: Analyze this learner's progress and identify their main strengths.",
+    analyzeButton: "Analyze with LongView",
+    analyzingButton: "Analyzing...",
+    analyzingMessage:
+      "LongView is analyzing the longitudinal data...",
+    selectLearnerError:
+      "Please select a learner.",
+    questionRequiredError:
+      "Please enter a question for LongView.",
+    analysisFailed:
+      "LongView could not complete the analysis. Please try again.",
+    resultTitle: "Analysis Result",
+    emptyResult: "No analysis performed yet.",
+    reviewTitle: "Teacher Decision",
+    reviewDescription:
+      "LongView provides decision support. The final decision belongs to the teacher.",
+    commentPlaceholder:
+      "Teacher comment...",
+    approve: "Approve",
+    modify: "Modify",
+    reject: "Reject",
+    reviewNoLearner:
+      "Please select a learner.",
+    reviewNoAnalysis:
+      "Please perform a LongView analysis first.",
+    reviewNoAnalysisId:
+      "The analysis reference is missing. Please perform a new analysis.",
+    reviewLearnerMismatch:
+      "The selected learner does not match the displayed analysis. Please perform a new analysis.",
+    reviewModificationComment:
+      "Please explain the modification in the teacher comment.",
+    approvedLabel:
+      "Recommendation approved",
+    modifiedLabel:
+      "Recommendation modified",
+    rejectedLabel:
+      "Recommendation rejected",
+    referenceLabel:
+      "Reference",
+    reviewSaved:
+      "The human decision has been recorded.",
+    reviewFailed:
+      "Unable to record the teacher's decision."
+  }
+};
+
+function applyLanguage(language) {
+  const t = uiTranslations[language];
+
+  document.documentElement.lang = language;
+
+  languageButton.textContent =
+    t.switchLanguage;
+
+  headerDescription.textContent =
+    t.headerDescription;
+
+  analysisTitle.textContent =
+    t.analysisTitle;
+
+  learnerLabel.textContent =
+    t.learnerLabel;
+
+  questionLabel.textContent =
+    t.questionLabel;
+
+  questionInput.placeholder =
+    t.questionPlaceholder;
+
+  analyzeButton.textContent =
+    t.analyzeButton;
+
+  resultTitle.textContent =
+    t.resultTitle;
+
+  reviewTitle.textContent =
+    t.reviewTitle;
+
+  reviewDescription.textContent =
+    t.reviewDescription;
+
+  teacherComment.placeholder =
+    t.commentPlaceholder;
+
+  approveButton.textContent =
+    t.approve;
+
+  modifyButton.textContent =
+    t.modify;
+
+  rejectButton.textContent =
+    t.reject;
+
+  const emptyOption =
+    learnerSelect.querySelector('option[value=""]');
+
+  if (emptyOption) {
+    emptyOption.textContent =
+      t.selectLearner;
+  }
+
+  if (!currentAnalysis) {
+    result.textContent =
+      t.emptyResult;
+  }
+}
+
+languageButton.addEventListener(
+  "click",
+  () => {
+    currentLanguage =
+      currentLanguage === "fr"
+        ? "en"
+        : "fr";
+
+    applyLanguage(
+      currentLanguage
+    );
+  }
+);
 let currentAnalysis = "";
 let currentAnalysisLearnerId = "";
 let currentAnalysisId = "";
@@ -246,7 +450,7 @@ learnerSelect.addEventListener(
     currentAnalysisLearnerId = "";
     currentAnalysisId = "";
     result.textContent =
-      "Aucune analyse effectuÃ©e.";
+      "Aucune analyse effectuée.";
 
     teacherComment.value = "";
   }
@@ -262,13 +466,13 @@ analyzeButton.addEventListener(
 
     if (!learnerId) {
       result.textContent =
-        "Veuillez sÃ©lectionner un apprenant.";
+        uiTranslations[currentLanguage].selectLearnerError;
       return;
     }
 
     if (!question) {
       result.textContent =
-        "Veuillez saisir une question pour LongView.";
+        uiTranslations[currentLanguage].questionRequiredError;
       return;
     }
 
@@ -276,10 +480,10 @@ analyzeButton.addEventListener(
 learnerSelect.disabled = true;
 
 analyzeButton.textContent =
-  "Analyse en cours...";
+  uiTranslations[currentLanguage].analyzingButton;
 
     result.textContent =
-      "LongView analyse les donnÃ©es longitudinales...";
+      uiTranslations[currentLanguage].analyzingMessage;
 
     try {
       const response =
@@ -293,7 +497,8 @@ analyzeButton.textContent =
             },
             body: JSON.stringify({
               learnerId,
-              question
+              question,
+              language: currentLanguage
             })
           }
         );
@@ -330,13 +535,13 @@ analyzeButton.textContent =
       );
 
       result.textContent =
-        "LongView n'a pas pu terminer l'analyse. Veuillez rÃ©essayer.";
+        uiTranslations[currentLanguage].analysisFailed;
     } finally {
   analyzeButton.disabled = false;
   learnerSelect.disabled = false;
 
   analyzeButton.textContent =
-    "Analyser avec LongView";
+    uiTranslations[currentLanguage].analyzeButton;
 }
   }
 );
@@ -349,19 +554,19 @@ async function submitReview(decision) {
 
   if (!learnerId) {
     alert(
-      "Veuillez sÃ©lectionner un apprenant."
+      uiTranslations[currentLanguage].reviewNoLearner
     );
     return;
   }
   if (!currentAnalysis) {
     alert(
-      "Veuillez d'abord effectuer une analyse LongView."
+      uiTranslations[currentLanguage].reviewNoAnalysis
     );
     return;
   }
     if (!currentAnalysisId) {
     alert(
-      "La rÃ©fÃ©rence de l'analyse est manquante. Veuillez effectuer une nouvelle analyse."
+      uiTranslations[currentLanguage].reviewNoAnalysisId
     );
     return;
   }
@@ -370,7 +575,7 @@ async function submitReview(decision) {
     currentAnalysisLearnerId
   ) {
     alert(
-      "L'apprenant sÃ©lectionnÃ© ne correspond pas Ã  l'analyse affichÃ©e. Veuillez effectuer une nouvelle analyse."
+      uiTranslations[currentLanguage].reviewLearnerMismatch
     );
     return;
   }
@@ -379,7 +584,7 @@ async function submitReview(decision) {
     !comment
   ) {
     alert(
-      "Veuillez expliquer la modification dans le commentaire de l'enseignant."
+      uiTranslations[currentLanguage].reviewModificationComment
     );
     return;
   }
@@ -420,19 +625,22 @@ async function submitReview(decision) {
       );
     }
 
+    const t =
+      uiTranslations[currentLanguage];
+
     const labels = {
       approved:
-        "Recommandation approuvÃ©e",
+        t.approvedLabel,
       modified:
-        "Recommandation modifiÃ©e",
+        t.modifiedLabel,
       rejected:
-        "Recommandation rejetÃ©e"
+        t.rejectedLabel
     };
 
     alert(
       `${labels[decision]}.\n\n` +
-      `RÃ©fÃ©rence : ${data.review.reviewId}\n` +
-      "La dÃ©cision humaine a Ã©tÃ© enregistrÃ©e."
+      `${t.referenceLabel} : ${data.review.reviewId}\n` +
+      t.reviewSaved
     );
   } catch (error) {
     console.error(
@@ -441,7 +649,7 @@ async function submitReview(decision) {
     );
 
     alert(
-      "Impossible d'enregistrer la dÃ©cision de l'enseignant."
+      uiTranslations[currentLanguage].reviewFailed
     );
   }
 }

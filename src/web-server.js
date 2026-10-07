@@ -1,4 +1,4 @@
-﻿const express = require("express");
+const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
@@ -99,6 +99,17 @@ app.post(
         String(
           req.body?.question || ""
         ).trim();
+      const requestedLanguage =
+        String(
+          req.body?.language || "fr"
+        )
+          .trim()
+          .toLowerCase();
+
+      const language =
+        requestedLanguage === "en"
+          ? "en"
+          : "fr";
 
       if (!learnerId) {
         return res.status(400).json({
@@ -133,12 +144,18 @@ app.post(
         });
       }
 
+      const responseLanguageInstruction =
+        language === "en"
+          ? "Respond entirely in English, including headings, table headers, evidence explanations and recommendations."
+          : "Réponds entièrement en français, y compris les titres, les en-têtes des tableaux, les explications des preuves et les recommandations.";
       const agentQuestion =
         `${question}
 
 Selected learner ID: ${learnerId}
 
-Use only evidence associated with this learner.`;
+Use only evidence associated with this learner.
+
+${responseLanguageInstruction}`;
 
       const result =
         await runLLMAgent(
