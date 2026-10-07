@@ -273,9 +273,10 @@ analyzeButton.addEventListener(
     }
 
     analyzeButton.disabled = true;
+learnerSelect.disabled = true;
 
-    analyzeButton.textContent =
-      "Analyse en cours...";
+analyzeButton.textContent =
+  "Analyse en cours...";
 
     result.textContent =
       "LongView analyse les donnÃ©es longitudinales...";
@@ -331,11 +332,12 @@ analyzeButton.addEventListener(
       result.textContent =
         "LongView n'a pas pu terminer l'analyse. Veuillez rÃ©essayer.";
     } finally {
-      analyzeButton.disabled = false;
+  analyzeButton.disabled = false;
+  learnerSelect.disabled = false;
 
-      analyzeButton.textContent =
-        "Analyser avec LongView";
-    }
+  analyzeButton.textContent =
+    "Analyser avec LongView";
+}
   }
 );
 async function submitReview(decision) {
