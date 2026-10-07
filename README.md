@@ -1,5 +1,7 @@
 # EDUKAI AFRICA – LongView Agent
 
+**English | [Français](README.fr.md)**
+
 
 
 > **MCP-powered longitudinal learning intelligence for African education**
@@ -22,7 +24,7 @@ Instead of looking at a single test score, LongView examines longitudinal learni
 
 
 
-\---
+---
 
 
 
@@ -34,17 +36,17 @@ In many educational contexts, especially where digital infrastructure and resour
 
 
 
-\- report cards;
+- report cards;
 
-\- attendance records;
+- attendance records;
 
-\- assessments;
+- assessments;
 
-\- teacher observations;
+- teacher observations;
 
-\- different academic years;
+- different academic years;
 
-\- separate administrative systems.
+- separate administrative systems.
 
 
 
@@ -56,15 +58,15 @@ This can make questions such as the following difficult to answer quickly:
 
 
 
-\- Is this learner genuinely improving over time?
+- Is this learner genuinely improving over time?
 
-\- Is a difficulty persistent or temporary?
+- Is a difficulty persistent or temporary?
 
-\- Which subject shows the strongest sustained progress?
+- Which subject shows the strongest sustained progress?
 
-\- Are there missing records that reduce confidence in the analysis?
+- Are there missing records that reduce confidence in the analysis?
 
-\- What evidence supports a recommendation?
+- What evidence supports a recommendation?
 
 
 
@@ -72,7 +74,7 @@ LongView is designed to help answer these questions while keeping the teacher in
 
 
 
-\---
+---
 
 
 
@@ -84,21 +86,21 @@ EDUKAI AFRICA is designed around constraints that matter in African education sy
 
 
 
-\- fragmented learner records;
+- fragmented learner records;
 
-\- limited digital infrastructure;
+- limited digital infrastructure;
 
-\- bandwidth and affordability constraints;
+- bandwidth and affordability constraints;
 
-\- large classes and teacher workload;
+- large classes and teacher workload;
 
-\- incomplete historical data;
+- incomplete historical data;
 
-\- multilingual environments;
+- multilingual environments;
 
-\- need for explainable and auditable AI;
+- need for explainable and auditable AI;
 
-\- importance of human oversight in educational decisions.
+- importance of human oversight in educational decisions.
 
 
 
@@ -110,7 +112,7 @@ The architecture is intended to evolve toward integration with school informatio
 
 
 
-\---
+---
 
 
 
@@ -130,23 +132,23 @@ LongView can then:
 
 
 
-1\. retrieve the learner profile;
+1. retrieve the learner profile;
 
-2\. inspect longitudinal academic and attendance records;
+2. inspect longitudinal academic and attendance records;
 
-3\. analyze trends across multiple periods;
+3. analyze trends across multiple periods;
 
-4\. identify improving, stable or declining patterns;
+4. identify improving, stable or declining patterns;
 
-5\. recognize persistent difficulties;
+5. recognize persistent difficulties;
 
-6\. detect missing data;
+6. detect missing data;
 
-7\. retrieve evidence supporting the analysis;
+7. retrieve evidence supporting the analysis;
 
-8\. generate a cautious recommendation;
+8. generate a cautious recommendation;
 
-9\. require a teacher to approve, modify or reject the recommendation.
+9. require a teacher to approve, modify or reject the recommendation.
 
 
 
@@ -154,17 +156,17 @@ The prototype currently analyzes synthetic learner records across:
 
 
 
-\- Mathematics;
+- Mathematics;
 
-\- Science;
+- Science;
 
-\- Language;
+- Language;
 
-\- Attendance.
+- Attendance.
 
 
 
-\---
+---
 
 
 
@@ -184,23 +186,23 @@ The agent can:
 
 
 
-\- interpret the teacher's request;
+- interpret the teacher's request;
 
-\- select relevant MCP tools;
+- select relevant MCP tools;
 
-\- retrieve structured learner information;
+- retrieve structured learner information;
 
-\- analyze longitudinal trends;
+- analyze longitudinal trends;
 
-\- request supporting evidence;
+- request supporting evidence;
 
-\- reason across multiple tool results;
+- reason across multiple tool results;
 
-\- handle incomplete information;
+- handle incomplete information;
 
-\- produce an evidence-grounded response;
+- produce an evidence-grounded response;
 
-\- stop before consequential teacher approval.
+- stop before consequential teacher approval.
 
 
 
@@ -208,7 +210,7 @@ The exact sequence of MCP calls is therefore driven by the request and available
 
 
 
-\---
+---
 
 
 
@@ -294,25 +296,25 @@ The project separates:
 
 
 
-\- user interaction;
+- user interaction;
 
-\- LLM reasoning;
+- LLM reasoning;
 
-\- MCP tool execution;
+- MCP tool execution;
 
-\- longitudinal analytics;
+- longitudinal analytics;
 
-\- evidence retrieval;
+- evidence retrieval;
 
-\- response safety;
+- response safety;
 
-\- teacher decision-making;
+- teacher decision-making;
 
-\- audit logging.
+- audit logging.
 
 
 
-\---
+---
 
 
 
@@ -328,7 +330,7 @@ The MCP server currently registers four tools.
 
 
 
-### `get\_learner\_profile`
+### `get_learner_profile`
 
 
 
@@ -336,7 +338,7 @@ Retrieves the structured longitudinal profile of a learner.
 
 
 
-### `analyze\_longitudinal\_trends`
+### `analyze_longitudinal_trends`
 
 
 
@@ -344,13 +346,13 @@ Analyzes available observations across academic periods and identifies patterns 
 
 
 
-\- improving;
+- improving;
 
-\- declining;
+- declining;
 
-\- stable;
+- stable;
 
-\- insufficient data.
+- insufficient data.
 
 
 
@@ -358,7 +360,7 @@ It also evaluates data completeness and confidence.
 
 
 
-### `retrieve\_evidence`
+### `retrieve_evidence`
 
 
 
@@ -366,21 +368,21 @@ Returns the observations supporting a longitudinal claim, including:
 
 
 
-\- available values;
+- available values;
 
-\- missing years;
+- missing years;
 
-\- first and last valid observations;
+- first and last valid observations;
 
-\- calculated change;
+- calculated change;
 
-\- number of observations;
+- number of observations;
 
-\- confidence information.
+- confidence information.
 
 
 
-### `submit\_teacher\_review`
+### `submit_teacher_review`
 
 
 
@@ -400,7 +402,7 @@ Teacher review remains a separate human action.
 
 
 
-\---
+---
 
 
 
@@ -424,11 +426,11 @@ The teacher can:
 
 
 
-\- **Approve** the recommendation;
+- **Approve** the recommendation;
 
-\- **Modify** it with teacher input;
+- **Modify** it with teacher input;
 
-\- **Reject** it.
+- **Reject** it.
 
 
 
@@ -440,15 +442,15 @@ The prototype rejects:
 
 
 
-\- missing analysis identifiers;
+- missing analysis identifiers;
 
-\- unknown analysis identifiers;
+- unknown analysis identifiers;
 
-\- an analysis submitted for the wrong learner;
+- an analysis submitted for the wrong learner;
 
-\- modified analysis content that does not match the registered analysis;
+- modified analysis content that does not match the registered analysis;
 
-\- unsupported teacher decisions.
+- unsupported teacher decisions.
 
 
 
@@ -456,7 +458,7 @@ This creates a clear boundary between AI-generated decision support and human ed
 
 
 
-\---
+---
 
 
 
@@ -472,21 +474,21 @@ For each analyzed metric, the system can track:
 
 
 
-\- observations used;
+- observations used;
 
-\- missing periods;
+- missing periods;
 
-\- first valid observation;
+- first valid observation;
 
-\- last valid observation;
+- last valid observation;
 
-\- change over time;
+- change over time;
 
-\- direction of the trend;
+- direction of the trend;
 
-\- data completeness;
+- data completeness;
 
-\- confidence.
+- confidence.
 
 
 
@@ -498,7 +500,7 @@ When insufficient observations are available, the system can explicitly return a
 
 
 
-\---
+---
 
 
 
@@ -514,9 +516,9 @@ It currently checks selected categories of unsupported claims, including:
 
 
 
-\- unsupported causal explanations;
+- unsupported causal explanations;
 
-\- unsupported follow-up schedules or precise timelines.
+- unsupported follow-up schedules or precise timelines.
 
 
 
@@ -528,7 +530,7 @@ This safety mechanism is intentionally described as a **targeted prototype guard
 
 
 
-\---
+---
 
 
 
@@ -544,13 +546,13 @@ The audit workflow can record:
 
 
 
-\- session creation;
+- session creation;
 
-\- MCP actions;
+- MCP actions;
 
-\- the Human-in-the-Loop boundary;
+- the Human-in-the-Loop boundary;
 
-\- final workflow metadata.
+- final workflow metadata.
 
 
 
@@ -562,7 +564,7 @@ Runtime logs are excluded from Git.
 
 
 
-\---
+---
 
 
 
@@ -602,7 +604,7 @@ This allows the agent, MCP tools and reliability mechanisms to be demonstrated w
 
 
 
-\---
+---
 
 
 
@@ -610,21 +612,21 @@ This allows the agent, MCP tools and reliability mechanisms to be demonstrated w
 
 
 
-\- Node.js
+- Node.js
 
-\- Express
+- Express
 
-\- Model Context Protocol SDK
+- Model Context Protocol SDK
 
-\- Groq SDK
+- Groq SDK
 
-\- Zod
+- Zod
 
-\- HTML / CSS / JavaScript
+- HTML / CSS / JavaScript
 
-\- JSON synthetic longitudinal dataset
+- JSON synthetic longitudinal dataset
 
-\- Git
+- Git
 
 
 
@@ -632,7 +634,7 @@ The current tested development environment uses Node.js 20.
 
 
 
-\---
+---
 
 
 
@@ -648,11 +650,11 @@ Install:
 
 
 
-\- Node.js 20 or compatible version;
+- Node.js 20 or compatible version;
 
-\- npm;
+- npm;
 
-\- Git.
+- Git.
 
 
 
@@ -682,7 +684,7 @@ npm install
 
 
 
-\---
+---
 
 
 
@@ -724,11 +726,11 @@ Example:
 
 ```env
 
-LLM\_PROVIDER=groq
+LLM_PROVIDER=groq
 
-LLM\_MODEL=openai/gpt-oss-120b
+LLM_MODEL=openai/gpt-oss-120b
 
-GROQ\_API\_KEY=YOUR\_API\_KEY
+GROQ_API_KEY=YOUR_API_KEY
 
 ```
 
@@ -742,7 +744,7 @@ The repository's `.gitignore` excludes `.env`.
 
 
 
-\---
+---
 
 
 
@@ -786,7 +788,7 @@ http://localhost:3000/api/health
 
 
 
-\---
+---
 
 
 
@@ -798,13 +800,13 @@ A simple demonstration can be performed as follows:
 
 
 
-1\. Start LongView with `npm start`.
+1. Start LongView with `npm start`.
 
-2\. Open `http://localhost:3000`.
+2. Open `http://localhost:3000`.
 
-3\. Select `LRN001`.
+3. Select `LRN001`.
 
-4\. Ask:
+4. Ask:
 
 
 
@@ -816,13 +818,13 @@ Analyze this learner's evolution and identify the main strengths.
 
 
 
-5\. Start the LongView analysis.
+5. Start the LongView analysis.
 
-6\. Observe the generated longitudinal analysis and supporting evidence.
+6. Observe the generated longitudinal analysis and supporting evidence.
 
-7\. Review the recommendation.
+7. Review the recommendation.
 
-8\. Approve, modify or reject it as the teacher.
+8. Approve, modify or reject it as the teacher.
 
 
 
@@ -830,7 +832,7 @@ While an analysis is running, learner selection is temporarily locked to prevent
 
 
 
-\---
+---
 
 
 
@@ -886,15 +888,15 @@ The scenarios cover:
 
 
 
-\- emerging strengths with high confidence;
+- emerging strengths with high confidence;
 
-\- persistent difficulties;
+- persistent difficulties;
 
-\- declining longitudinal trends;
+- declining longitudinal trends;
 
-\- stable profile without false alerts;
+- stable profile without false alerts;
 
-\- missing data with limited confidence.
+- missing data with limited confidence.
 
 
 
@@ -914,9 +916,9 @@ The tests include:
 
 
 
-\- complete evidence with high confidence;
+- complete evidence with high confidence;
 
-\- incomplete evidence with preserved missing values and limited confidence.
+- incomplete evidence with preserved missing values and limited confidence.
 
 
 
@@ -932,11 +934,11 @@ The tests cover:
 
 
 
-\- unsupported causal claims;
+- unsupported causal claims;
 
-\- unsupported follow-up schedules;
+- unsupported follow-up schedules;
 
-\- cautious evidence-based responses.
+- cautious evidence-based responses.
 
 
 
@@ -952,21 +954,21 @@ These include:
 
 
 
-\- synthetic dataset availability;
+- synthetic dataset availability;
 
-\- health and safety metadata;
+- health and safety metadata;
 
-\- learner summaries;
+- learner summaries;
 
-\- mandatory analysis identifiers;
+- mandatory analysis identifiers;
 
-\- rejection of unknown analysis identifiers;
+- rejection of unknown analysis identifiers;
 
-\- rejection of cross-learner analysis reviews;
+- rejection of cross-learner analysis reviews;
 
-\- rejection of modified analysis content;
+- rejection of modified analysis content;
 
-\- rejection of unsupported teacher decisions.
+- rejection of unsupported teacher decisions.
 
 
 
@@ -978,17 +980,17 @@ The audit test verifies:
 
 
 
-\- audit session creation;
+- audit session creation;
 
-\- MCP action recording;
+- MCP action recording;
 
-\- Human-in-the-Loop boundary recording;
+- Human-in-the-Loop boundary recording;
 
-\- absence of API-key fields in the tested audit output.
+- absence of API-key fields in the tested audit output.
 
 
 
-\---
+---
 
 
 
@@ -1072,7 +1074,7 @@ EDUKAI-LONGVIEW/
 
 
 
-\---
+---
 
 
 
@@ -1132,7 +1134,7 @@ Important agent and MCP actions can be recorded for later inspection.
 
 
 
-\---
+---
 
 
 
@@ -1148,25 +1150,25 @@ Current limitations include:
 
 
 
-\- the demonstration dataset is synthetic;
+- the demonstration dataset is synthetic;
 
-\- the analysis registry is currently stored in server memory and resets when the server restarts;
+- the analysis registry is currently stored in server memory and resets when the server restarts;
 
-\- production authentication and authorization are not yet implemented;
+- production authentication and authorization are not yet implemented;
 
-\- the current response-safety detector targets selected unsupported-claim patterns and is not exhaustive;
+- the current response-safety detector targets selected unsupported-claim patterns and is not exhaustive;
 
-\- confidence represents evidence availability and completeness, not guaranteed pedagogical correctness;
+- confidence represents evidence availability and completeness, not guaranteed pedagogical correctness;
 
-\- the Web interface is currently primarily French even though the agent orchestration supports French and English;
+- the Web interface is currently primarily French even though the agent orchestration supports French and English;
 
-\- production-scale persistence, consent management and institutional data governance remain future work;
+- production-scale persistence, consent management and institutional data governance remain future work;
 
-\- the current prototype does not make autonomous high-stakes educational decisions.
+- the current prototype does not make autonomous high-stakes educational decisions.
 
 
 
-\---
+---
 
 
 
@@ -1178,33 +1180,33 @@ Possible next steps include:
 
 
 
-\- persistent analysis and review storage;
+- persistent analysis and review storage;
 
-\- authenticated teacher accounts;
+- authenticated teacher accounts;
 
-\- school and classroom access controls;
+- school and classroom access controls;
 
-\- integration with authorized education information systems;
+- integration with authorized education information systems;
 
-\- richer multilingual interfaces;
+- richer multilingual interfaces;
 
-\- support for additional African languages;
+- support for additional African languages;
 
-\- configurable curriculum indicators;
+- configurable curriculum indicators;
 
-\- teacher dashboards;
+- teacher dashboards;
 
-\- broader evaluation datasets;
+- broader evaluation datasets;
 
-\- expanded safety evaluation;
+- expanded safety evaluation;
 
-\- privacy and consent workflows;
+- privacy and consent workflows;
 
-\- deployment for low-bandwidth environments.
+- deployment for low-bandwidth environments.
 
 
 
-\---
+---
 
 
 
@@ -1224,17 +1226,17 @@ LongView explores an agentic architecture where:
 
 
 
-\- the LLM reasons;
+- the LLM reasons;
 
-\- MCP provides structured tools;
+- MCP provides structured tools;
 
-\- longitudinal data provides context;
+- longitudinal data provides context;
 
-\- evidence supports claims;
+- evidence supports claims;
 
-\- safety mechanisms constrain responses;
+- safety mechanisms constrain responses;
 
-\- and the teacher retains final authority.
+- and the teacher retains final authority.
 
 
 
@@ -1242,7 +1244,7 @@ That combination is especially relevant where educators need useful AI assistanc
 
 
 
-\---
+---
 
 
 
@@ -1260,25 +1262,25 @@ The project demonstrates:
 
 
 
-\- agentic multi-step reasoning;
+- agentic multi-step reasoning;
 
-\- dynamic MCP tool use;
+- dynamic MCP tool use;
 
-\- longitudinal educational analysis;
+- longitudinal educational analysis;
 
-\- evidence retrieval;
+- evidence retrieval;
 
-\- incomplete-data handling;
+- incomplete-data handling;
 
-\- Human-in-the-Loop decision control;
+- Human-in-the-Loop decision control;
 
-\- targeted response safety;
+- targeted response safety;
 
-\- auditability;
+- auditability;
 
-\- synthetic privacy-safe demonstration data;
+- synthetic privacy-safe demonstration data;
 
-\- reproducible open-source testing.
+- reproducible open-source testing.
 
 
 
@@ -1290,7 +1292,7 @@ The project is designed around a simple principle:
 
 
 
-\---
+---
 
 
 
@@ -1320,7 +1322,7 @@ These links will be updated when the public repository, deployment and challenge
 
 
 
-\---
+---
 
 
 
@@ -1340,7 +1342,7 @@ African Agentic AI Design Challenge — Education Track
 
 
 
-\---
+---
 
 
 
