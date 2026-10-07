@@ -1,4 +1,4 @@
-function escapeHtml(text) {
+﻿function escapeHtml(text) {
   return String(text)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -136,7 +136,7 @@ safeText =
       "<li>$1</li>"
     );
 
-  // Regrouper les éléments de liste consécutifs
+  // Regrouper les Ã©lÃ©ments de liste consÃ©cutifs
   safeText =
     safeText.replace(
       /(?:<li>.*?<\/li>\n?)+/gs,
@@ -144,7 +144,7 @@ safeText =
         `<ul>${list}</ul>`
     );
 
-  // Paragraphes / retours à la ligne
+  // Paragraphes / retours Ã  la ligne
   safeText =
     safeText.replace(
       /\n{2,}/g,
@@ -237,6 +237,20 @@ const rejectButton =
   document.getElementById("rejectButton");
 
 let currentAnalysis = "";
+let currentAnalysisLearnerId = "";
+let currentAnalysisId = "";
+learnerSelect.addEventListener(
+  "change",
+  () => {
+    currentAnalysis = "";
+    currentAnalysisLearnerId = "";
+    currentAnalysisId = "";
+    result.textContent =
+      "Aucune analyse effectuÃ©e.";
+
+    teacherComment.value = "";
+  }
+);
 analyzeButton.addEventListener(
   "click",
   async () => {
@@ -248,7 +262,7 @@ analyzeButton.addEventListener(
 
     if (!learnerId) {
       result.textContent =
-        "Veuillez sélectionner un apprenant.";
+        "Veuillez sÃ©lectionner un apprenant.";
       return;
     }
 
@@ -264,7 +278,7 @@ analyzeButton.addEventListener(
       "Analyse en cours...";
 
     result.textContent =
-      "LongView analyse les données longitudinales...";
+      "LongView analyse les donnÃ©es longitudinales...";
 
     try {
       const response =
@@ -300,8 +314,14 @@ analyzeButton.addEventListener(
   renderLongViewMarkdown(
     data.analysis
   );
-	  currentAnalysis =
-		data.analysis;
+	        currentAnalysis =
+        data.analysis;
+
+      currentAnalysisLearnerId =
+        data.learner.id;
+
+	  currentAnalysisId =
+        data.analysisId;
     } catch (error) {
       console.error(
         "LongView analysis failed:",
@@ -309,7 +329,7 @@ analyzeButton.addEventListener(
       );
 
       result.textContent =
-        "LongView n'a pas pu terminer l'analyse. Veuillez réessayer.";
+        "LongView n'a pas pu terminer l'analyse. Veuillez rÃ©essayer.";
     } finally {
       analyzeButton.disabled = false;
 
@@ -327,18 +347,31 @@ async function submitReview(decision) {
 
   if (!learnerId) {
     alert(
-      "Veuillez sélectionner un apprenant."
+      "Veuillez sÃ©lectionner un apprenant."
     );
     return;
   }
-
   if (!currentAnalysis) {
     alert(
       "Veuillez d'abord effectuer une analyse LongView."
     );
     return;
   }
-
+    if (!currentAnalysisId) {
+    alert(
+      "La rÃ©fÃ©rence de l'analyse est manquante. Veuillez effectuer une nouvelle analyse."
+    );
+    return;
+  }
+  if (
+    learnerId !==
+    currentAnalysisLearnerId
+  ) {
+    alert(
+      "L'apprenant sÃ©lectionnÃ© ne correspond pas Ã  l'analyse affichÃ©e. Veuillez effectuer une nouvelle analyse."
+    );
+    return;
+  }
   if (
     decision === "modified" &&
     !comment
@@ -361,6 +394,8 @@ async function submitReview(decision) {
           },
           body: JSON.stringify({
             learnerId,
+			 analysisId:
+              currentAnalysisId,
             recommendation:
               currentAnalysis,
             decision,
@@ -385,17 +420,17 @@ async function submitReview(decision) {
 
     const labels = {
       approved:
-        "Recommandation approuvée",
+        "Recommandation approuvÃ©e",
       modified:
-        "Recommandation modifiée",
+        "Recommandation modifiÃ©e",
       rejected:
-        "Recommandation rejetée"
+        "Recommandation rejetÃ©e"
     };
 
     alert(
       `${labels[decision]}.\n\n` +
-      `Référence : ${data.review.reviewId}\n` +
-      "La décision humaine a été enregistrée."
+      `RÃ©fÃ©rence : ${data.review.reviewId}\n` +
+      "La dÃ©cision humaine a Ã©tÃ© enregistrÃ©e."
     );
   } catch (error) {
     console.error(
@@ -404,7 +439,7 @@ async function submitReview(decision) {
     );
 
     alert(
-      "Impossible d'enregistrer la décision de l'enseignant."
+      "Impossible d'enregistrer la dÃ©cision de l'enseignant."
     );
   }
 }

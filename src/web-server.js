@@ -1,7 +1,10 @@
-const express = require("express");
+﻿const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
+const {
+  randomUUID
+} = require("crypto");
 const {
   runLLMAgent
 } = require("./llm-agent");
@@ -19,7 +22,8 @@ const PUBLIC_DIRECTORY =
 
 const LEARNERS_FILE =
   path.join(__dirname, "..", "data", "learners.json");
-
+const analysisRegistry =
+  new Map();
 app.use(cors());
 app.use(express.json());
 
@@ -140,9 +144,23 @@ Use only evidence associated with this learner.`;
         await runLLMAgent(
           agentQuestion
         );
+      const analysisId =
+        randomUUID();
 
+      analysisRegistry.set(
+        analysisId,
+        {
+          learnerId:
+            learner.id,
+          analysis:
+            result,
+          createdAt:
+            new Date().toISOString()
+        }
+      );
       res.json({
         success: true,
+		analysisId,
         learner: {
           id: learner.id,
           name: learner.name
@@ -175,7 +193,10 @@ app.post(
         String(
           req.body?.learnerId || ""
         ).trim();
-
+      const analysisId =
+        String(
+          req.body?.analysisId || ""
+        ).trim();
       const recommendation =
         String(
           req.body?.recommendation || ""
@@ -198,7 +219,13 @@ app.post(
             "Learner ID is required."
         });
       }
-
+            if (!analysisId) {
+        return res.status(400).json({
+          success: false,
+          error:
+            "Analysis ID is required."
+        });
+      }
       if (!recommendation) {
         return res.status(400).json({
           success: false,
@@ -241,7 +268,40 @@ app.post(
             "Learner not found."
         });
       }
+       const registeredAnalysis =
+        analysisRegistry.get(
+          analysisId
+        );
 
+      if (!registeredAnalysis) {
+        return res.status(404).json({
+          success: false,
+          error:
+            "Analysis not found."
+        });
+      }
+
+      if (
+        registeredAnalysis.learnerId !==
+        learnerId
+      ) {
+        return res.status(409).json({
+          success: false,
+          error:
+            "Analysis does not belong to this learner."
+        });
+      }
+
+      if (
+        registeredAnalysis.analysis !==
+        recommendation
+      ) {
+        return res.status(409).json({
+          success: false,
+          error:
+            "Recommendation does not match the registered analysis."
+        });
+      }
       const review =
         submitTeacherReview({
           learnerId,
@@ -297,5 +357,6 @@ if (require.main === module) {
 
 module.exports = {
   app,
-  loadLearners
+  loadLearners,
+  analysisRegistry
 };
