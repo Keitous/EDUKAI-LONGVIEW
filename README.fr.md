@@ -38,7 +38,7 @@ La documentation du projet est disponible en anglais et en français.
 
 
 
-La couche agent prend actuellement en charge les interactions en français et en anglais. L’interface Web du prototype reste principalement en français.
+La couche agent, l'interface Web et les analyses générées prennent en charge le français et l'anglais.
 
 
 
@@ -694,7 +694,7 @@ Clonez le dépôt :
 
 ```bash
 
-git clone <URL-DU-DEPOT-GITHUB-PUBLIC>
+git clone https://github.com/Keitous/EDUKAI-LONGVIEW
 
 cd EDUKAI-LONGVIEW
 
@@ -1198,7 +1198,7 @@ Ses limites actuelles comprennent notamment :
 
 - le niveau de confiance reflète la disponibilité et la complétude des preuves et non une garantie de justesse pédagogique ;
 
-- l’interface Web est actuellement principalement en français, même si la couche agent prend en charge le français et l’anglais ;
+- l'interface Web et les analyses générées par l'agent prennent en charge le français et l'anglais ;
 
 - la persistance à grande échelle, la gestion du consentement et la gouvernance institutionnelle des données restent des travaux futurs ;
 
@@ -1340,13 +1340,13 @@ Le projet repose sur un principe simple :
 
 **Code source :**  
 
-`<URL-DU-DEPOT-GITHUB-PUBLIC>`
+`https://github.com/Keitous/EDUKAI-LONGVIEW`
 
 
 
 **Démonstration en ligne :**  
 
-`<URL-DE-LA-DEMONSTRATION>`
+`https://edukai-longview.onrender.com`
 
 
 
@@ -1393,4 +1393,3 @@ Ce prototype est distribué sous **licence ISC**.
 
 
 Le texte complet de la licence est disponible dans le fichier [`LICENSE`](LICENSE).
-

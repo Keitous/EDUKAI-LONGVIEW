@@ -664,7 +664,7 @@ Clone the repository:
 
 ```bash
 
-git clone <YOUR-PUBLIC-GITHUB-REPOSITORY-URL>
+git clone https://github.com/Keitous/EDUKAI-LONGVIEW.git
 
 cd EDUKAI-LONGVIEW
 
@@ -1160,7 +1160,7 @@ Current limitations include:
 
 - confidence represents evidence availability and completeness, not guaranteed pedagogical correctness;
 
-- the Web interface is currently primarily French even though the agent orchestration supports French and English;
+- the Web interface and agent-generated analyses support both French and English;
 
 - production-scale persistence, consent management and institutional data governance remain future work;
 
@@ -1302,13 +1302,13 @@ The project is designed around a simple principle:
 
 **Source code:**  
 
-`<PUBLIC-GITHUB-REPOSITORY-URL>`
+`https://github.com/Keitous/EDUKAI-LONGVIEW`
 
 
 
 **Live demo:**  
 
-`<LIVE-DEMO-URL>`
+`https://edukai-longview.onrender.com`
 
 
 
@@ -1351,4 +1351,3 @@ African Agentic AI Design Challenge — Education Track
 
 
 This prototype is currently configured with the ISC license in `package.json`.
-
