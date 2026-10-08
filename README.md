@@ -1322,11 +1322,8 @@ The project is designed around a simple principle:
 
 **Demo video:**  
 
-`<DEMO-VIDEO-URL>`
+https://youtu.be/hHK0fY73_WA
 
-
-
-These links will be updated when the public repository, deployment and challenge demonstration video are available.
 
 
 
