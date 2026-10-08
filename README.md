@@ -26,7 +26,7 @@ Instead of looking at a single test score, LongView examines longitudinal learni
 
 Watch the bilingual (English/French) demonstration of EDUKAI AFRICA – LongView Agent.
 
-▶️ **[Watch the official demo on YouTube](https://youtu.be/hHK0fY73_WA)**
+▶️ **[Watch the official demo on YouTube](https://youtu.be/bwEvfhiQXmw)**
 
 This 5-minute demonstration presents longitudinal learner analysis, MCP-powered evidence retrieval, AI-generated pedagogical recommendations, and human-in-the-loop teacher decisions.
 
@@ -1322,7 +1322,7 @@ The project is designed around a simple principle:
 
 **Demo video:**  
 
-https://youtu.be/hHK0fY73_WA
+https://youtu.be/bwEvfhiQXmw
 
 
 

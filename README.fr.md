@@ -26,7 +26,7 @@ Au lieu d’examiner uniquement le résultat d’une évaluation ponctuelle, Lon
 
 Découvrez la démonstration bilingue (français/anglais) du projet EDUKAI AFRICA – LongView Agent.
 
-▶️ **[Regarder la démonstration officielle sur YouTube](https://youtu.be/hHK0fY73_WA)**
+▶️ **[Regarder la démonstration officielle sur YouTube](https://youtu.be/bwEvfhiQXmw)**
 
 Cette démonstration de 5 minutes présente l'analyse longitudinale des apprentissages, la recherche de preuves à l'aide du protocole MCP, les recommandations pédagogiques générées par l'intelligence artificielle et la validation des décisions par l'enseignant.
 
