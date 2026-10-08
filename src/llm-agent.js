@@ -1,3 +1,4 @@
+const { connectExternalMCP } = require("./external-mcp");
 const Groq = require("groq-sdk");
 const { Client } = require("@modelcontextprotocol/sdk/client/index.js");
 const {
@@ -71,12 +72,39 @@ addAuditEvent(
 
   await mcpClient.connect(transport);
 
-  try {
-    const availableTools = await mcpClient.listTools();
+let externalMCP = null;
 
-    const groqTools = mcpToolsToGroq(
-      availableTools.tools
-    );
+try {
+  externalMCP = await connectExternalMCP();
+
+  console.log("[EXTERNAL MCP] Filesystem server connected.");
+
+  const availableTools = await mcpClient.listTools();
+    const internalAllowedTools = new Set([
+  "get_learner_profile",
+  "analyze_longitudinal_trends",
+  "retrieve_evidence"
+]);
+
+const groqTools = mcpToolsToGroq(
+  availableTools.tools.filter(
+    tool => internalAllowedTools.has(tool.name)
+  )
+);
+
+groqTools.push({
+  type: "function",
+  function: {
+    name: "read_pedagogical_guidance",
+    description:
+      "Read the authorized pedagogical guidance document using the external Filesystem MCP server. Use this tool before making pedagogical recommendations.",
+    parameters: {
+      type: "object",
+      properties: {},
+      additionalProperties: false
+    }
+  }
+});
 
     console.log(
       "\n=== EDUKAI AFRICA - LLM + MCP AGENT ==="
@@ -512,11 +540,33 @@ addAuditEvent(
     arguments: args
   }
 );
-        const toolResult =
-          await mcpClient.callTool({
-            name: toolName,
-            arguments: args
-          });
+        let toolResult;
+
+if (toolName === "read_pedagogical_guidance") {
+  if (
+    !args ||
+    typeof args !== "object" ||
+    Array.isArray(args) ||
+    Object.keys(args).length !== 0
+  ) {
+    throw new Error(
+      "Unauthorized arguments for pedagogical guidance tool."
+    );
+  }
+
+  toolResult = await externalMCP.readGuidance();
+
+} else if (internalAllowedTools.has(toolName)) {
+  toolResult = await mcpClient.callTool({
+    name: toolName,
+    arguments: args
+  });
+
+} else {
+  throw new Error(
+    `Unauthorized MCP tool requested: ${toolName}`
+  );
+}
 
         const textParts =
           (toolResult.content || [])
@@ -574,8 +624,14 @@ addAuditEvent(
       `Agent stopped after ${maxSteps} steps to prevent an uncontrolled loop.`
     );
   } finally {
+  try {
+    if (externalMCP) {
+      await externalMCP.client.close();
+    }
+  } finally {
     await mcpClient.close();
   }
+}
 }
 
 if (require.main === module) {
