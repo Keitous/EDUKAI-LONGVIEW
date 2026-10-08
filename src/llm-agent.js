@@ -1,4 +1,4 @@
-﻿const Groq = require("groq-sdk");
+const Groq = require("groq-sdk");
 const { Client } = require("@modelcontextprotocol/sdk/client/index.js");
 const {
   StdioClientTransport
@@ -297,6 +297,26 @@ RESPONSE QUALITY
 
 30. Never present a recommendation as an explanation for
     why a past improvement or decline occurred.
+
+31. In French responses, use natural French for all
+    teacher-facing explanations, tables, evidence summaries,
+    source descriptions and recommendations.
+    Translate technical trend labels:
+    improving = en amélioration;
+    stable = stable;
+    declining = en régression;
+    insufficient_data = données insuffisantes.
+    Translate confidence labels:
+    high = élevé; medium = moyen; low = faible.
+    Describe persistentDifficulties as
+    "difficultés persistantes".
+    Use human-readable French names for MCP tools in
+    narrative explanations, while preserving exact tool
+    identifiers and original evidence in structured data,
+    citations and audit records.
+    Do not expose raw internal field names unnecessarily.
+    Avoid literal Markdown formatting markers in tables.
+    Never alter numerical evidence or invent sources.
 
 Remember:
 OBSERVE from evidence.
