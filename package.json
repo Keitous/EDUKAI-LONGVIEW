@@ -4,12 +4,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/web-server.js",
-    "test": "npm run test:evaluation && npm run test:evidence && npm run test:audit && npm run test:safety && npm run test:web",
+    "test": "npm run test:evaluation && npm run test:evidence && npm run test:audit && npm run test:safety && npm run test:web && npm run test:external-mcp && npm run test:external-mcp-module",
     "test:evaluation": "node tests/test-evaluation.js",
     "test:evidence": "node tests/test-evidence.js",
     "test:audit": "node tests/test-audit.js",
     "test:safety": "node tests/test-response-safety.js",
-    "test:web": "node tests/test-web-api.js"
+    "test:web": "node tests/test-web-api.js",
+    "test:external-mcp": "node tests/test-external-mcp.js",
+    "test:external-mcp-module": "node tests/test-external-mcp-module.js"
   },
   "keywords": [],
   "author": "",
