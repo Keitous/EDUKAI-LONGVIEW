@@ -174,3 +174,13 @@ access control, security, and institutional validation.
 ### 12. Design Principle
 
 AI recommends. Teachers decide.
+
+## 13. Architecture Diagram
+
+The following diagram illustrates the EDUKAI AFRICA
+LongView Agent architecture, including the LLM,
+internal and external MCP integrations, educational
+data sources, and human oversight.
+
+![EDUKAI AFRICA LongView Agent Architecture](docs/architecture.png)
+
