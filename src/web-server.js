@@ -11,6 +11,10 @@ const {
 const {
   submitTeacherReview
 } = require("./teacher-review");
+const {
+  normalizeLanguage,
+  getTranslations
+} = require("./translations");
 
 const app = express();
 
@@ -106,10 +110,17 @@ app.post(
           .trim()
           .toLowerCase();
 
-      const language =
-        requestedLanguage === "en"
-          ? "en"
-          : "fr";
+     let language;
+
+try {
+  language = normalizeLanguage(requestedLanguage);
+  getTranslations(language);
+} catch (error) {
+  return res.status(400).json({
+    success: false,
+    error: error.message
+  });
+}
 
       if (!learnerId) {
         return res.status(400).json({

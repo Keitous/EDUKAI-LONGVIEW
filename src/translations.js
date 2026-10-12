@@ -47,13 +47,34 @@
       "Recognize {name}'s progress in {subject} and consider appropriate learning activities under teacher supervision."
   }
 };
+const supportedLanguages = Object.freeze([
+  "fr",
+  "en",
+  "sus",
+  "ff",
+  "man"
+]);
 
+function normalizeLanguage(language = "fr") {
+  const normalized = String(language)
+    .trim()
+    .toLowerCase();
+
+  if (!supportedLanguages.includes(normalized)) {
+    throw new Error(
+      `Unsupported language: ${language}. ` +
+      `Supported languages: ${supportedLanguages.join(", ")}`
+    );
+  }
+
+  return normalized;
+}
 function getTranslations(language = "fr") {
-  const normalized = String(language).toLowerCase();
+  const normalized = normalizeLanguage(language);
 
   if (!Object.prototype.hasOwnProperty.call(translations, normalized)) {
     throw new Error(
-      `Unsupported language: ${language}. Supported languages: fr, en`
+      `Translations not yet available for: ${normalized}`
     );
   }
 
@@ -61,5 +82,7 @@ function getTranslations(language = "fr") {
 }
 
 module.exports = {
-  getTranslations
+  getTranslations,
+  normalizeLanguage,
+  supportedLanguages
 };
