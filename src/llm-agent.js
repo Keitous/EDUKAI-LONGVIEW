@@ -359,7 +359,7 @@ THE TEACHER DECIDES.
       }
     ];
 
-    const maxSteps = 8;
+    const maxSteps = 10;
 
     for (
       let step = 1;

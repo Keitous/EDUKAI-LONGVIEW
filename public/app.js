@@ -99,6 +99,12 @@ function convertMarkdownTables(text) {
 function renderLongViewMarkdown(markdown) {
   let safeText =
     escapeHtml(markdown);
+
+  // Restaurer uniquement les sauts de ligne HTML echappes.
+  safeText = safeText.replace(
+    /&lt;br\s*\/?&gt;/gi,
+    "<br>"
+  );
 safeText =
   convertMarkdownTables(
     safeText
