@@ -17,7 +17,7 @@ async function main() {
    * the Web API backend.
    */
   const learners =
-    loadLearners();
+  await loadLearners();
 
   assert.strictEqual(
     learners.length,
