@@ -6,6 +6,7 @@ const path = require("path");
 const { analyzeLearnerTrends } = require("./trend-analyzer");
 const { retrieveEvidence } = require("./evidence-retriever");
 const { submitTeacherReview } = require("./teacher-review");
+const { getAllLearners } = require("./data/learner-store");
 
 const server = new McpServer({
   name: "edukai-longview",
@@ -23,14 +24,10 @@ server.registerTool(
     }
   },
   async ({ learnerId }) => {
-    const dataPath = path.join(__dirname, "..", "data", "learners.json");
-
-    const rawData = fs.readFileSync(dataPath, "utf8").replace(/^\uFEFF/, "");
-    const data = JSON.parse(rawData);
-
-    const learner = data.learners.find(
-      (item) => item.id.toLowerCase() === learnerId.toLowerCase()
-    );
+    const learners = await getAllLearners();
+	const learner = learners.find(
+	  (item) => item.id.toLowerCase() === learnerId.toLowerCase()
+	);
 
     if (!learner) {
       return {
@@ -70,14 +67,10 @@ server.registerTool(
     }
   },
   async ({ learnerId }) => {
-    const dataPath = path.join(__dirname, "..", "data", "learners.json");
-
-    const rawData = fs.readFileSync(dataPath, "utf8").replace(/^\uFEFF/, "");
-    const data = JSON.parse(rawData);
-
-    const learner = data.learners.find(
-      (item) => item.id.toLowerCase() === learnerId.toLowerCase()
-    );
+    const learners = await getAllLearners();
+	const learner = learners.find(
+	  (item) => item.id.toLowerCase() === learnerId.toLowerCase()
+	);
 
     if (!learner) {
       return {
@@ -136,14 +129,10 @@ server.registerTool(
     }
   },
   async ({ learnerId, metric }) => {
-    const dataPath = path.join(__dirname, "..", "data", "learners.json");
-
-    const rawData = fs.readFileSync(dataPath, "utf8").replace(/^\uFEFF/, "");
-    const data = JSON.parse(rawData);
-
-    const learner = data.learners.find(
-      (item) => item.id.toLowerCase() === learnerId.toLowerCase()
-    );
+    const learners = await getAllLearners();
+	const learner = learners.find(
+	  (item) => item.id.toLowerCase() === learnerId.toLowerCase()
+	);
 
     if (!learner) {
       return {

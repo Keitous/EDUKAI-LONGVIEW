@@ -15,7 +15,9 @@ const {
   normalizeLanguage,
   getTranslations
 } = require("./translations");
-
+const {
+  getAllLearners
+} = require("./data/learner-store");
 const app = express();
 
 const PORT =
@@ -35,31 +37,16 @@ app.use(
   express.static(PUBLIC_DIRECTORY)
 );
 
-function loadLearners() {
-  const rawData =
-  fs.readFileSync(
-    LEARNERS_FILE,
-    "utf8"
-  );
-
-const cleanData =
-  rawData.replace(
-    /^\uFEFF/,
-    ""
-  );
-
-const data =
-  JSON.parse(cleanData);
-
-  return data.learners || [];
+async function loadLearners() {
+  return await getAllLearners();
 }
 
 app.get(
   "/api/learners",
-  (req, res) => {
+  async (req, res) => {
     try {
       const learners =
-        loadLearners();
+  await loadLearners();
 
       const summary =
         learners.map(
@@ -139,7 +126,7 @@ try {
       }
 
       const learners =
-        loadLearners();
+  await loadLearners();
 
       const learner =
         learners.find(
@@ -215,7 +202,7 @@ ${responseLanguageInstruction}`;
 );
 app.post(
   "/api/review",
-  (req, res) => {
+  async (req, res) => {
     try {
       const learnerId =
         String(
@@ -281,7 +268,7 @@ app.post(
       }
 
       const learners =
-        loadLearners();
+  await loadLearners();
 
       const learner =
         learners.find(

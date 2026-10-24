@@ -1,5 +1,17 @@
+# Dependances Node.js
 node_modules/
+
+# Configuration et informations sensibles
 .env
+.env.*
+!.env.example
+
+# Journaux et historiques
 logs/
 *.log
+
+# Sauvegardes temporaires
+*.backup.js
+
+# Fichiers systeme
 .DS_Store
