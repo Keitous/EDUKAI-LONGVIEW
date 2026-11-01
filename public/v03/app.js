@@ -239,7 +239,27 @@
     container.append(svg);
   }
   function drawMetrics(metrics){const target=$("metrics");target.replaceChildren();metrics.forEach(m=>{const box=element("div","metric");box.append(element("span","",({mathematics:"Mathématiques",science:"Sciences",language:"Langues",attendance:"Assiduité"}[m.label] || m.label)),element("strong","",m.delta===null?"—":`${m.delta>0?"+":""}${m.delta}`));target.append(box);});}
-  function normalizeRecommendations(payload){return arr(payload,"recommendations","recommandations","data","results");}
+  function normalizeRecommendations(payload) {
+    const direct = arr(
+      payload,
+      "recommendations",
+      "recommandations",
+      "data",
+      "results"
+    );
+
+    if (direct.length) return direct;
+
+    const nested = payload?.result;
+
+    return arr(
+      nested,
+      "recommendations",
+      "recommandations",
+      "data",
+      "results"
+    );
+  }
   function renderRecommendations(payload) {
   const target = $("recommendations");
   target.replaceChildren();
@@ -291,6 +311,14 @@
 
     card.append(heading);
 
+    const observation = pick(
+      r, "observation"
+    ) || pick(historyRow, "observation");
+
+    const action = pick(
+      r, "action"
+    ) || pick(historyRow, "action");
+
     const content = pick(
       r, "content", "contenu", "recommendation",
       "suggestion", "message", "text", "description"
@@ -299,12 +327,32 @@
       "recommendation", "description"
     );
 
-    card.append(element(
-      "p", "",
-      content
-        ? String(content)
-        : "Contenu non fourni par cette réponse du serveur."
-    ));
+    if (observation) {
+      card.append(element(
+        "p", "",
+        `Observation : ${String(observation)}`
+      ));
+    }
+
+    if (action) {
+      card.append(element(
+        "p", "",
+        `Action recommandée : ${String(action)}`
+      ));
+    }
+
+    if (!observation && !action) {
+      card.append(element(
+        "p", "",
+        content
+          ? String(content)
+          : "Contenu non fourni par cette réponse du serveur."
+      ));
+    } else if (content &&
+               String(content) !== String(action) &&
+               String(content) !== String(observation)) {
+      card.append(element("p", "", String(content)));
+    }
 
     const reason = pick(
       r, "justification", "rationale", "reason"
@@ -442,6 +490,101 @@ function openReview(card, recId, decision) {
     const pending=state.history.filter(r=>String(pick(r,"statut","recommendationStatus","statut_recommandation")||"").toLowerCase()==="en_attente");
     if(pending.length)renderRecommendations({recommendations:pending});
   }catch(e){notify(`Historique : ${e.message}`,true);}}
+    // Traductions locales des commentaires synthetiques de demonstration.
+    // Les textes originaux ne sont jamais modifies dans PostgreSQL.
+    const historyTranslationsV03 = new Map([
+      [
+        9,
+        "After reviewing Aminata Camara's results, I observe a 25-point improvement in mathematics over the 2023–2026 period. I would like to adapt the initial recommendation to consolidate her learning without imposing an excessive workload."
+      ],
+      [
+        8,
+        "Recommendation approved for the EDUKAI V0.3 educational demonstration."
+      ],
+      [
+        5,
+        "EDUKAI V0.3 demonstration human validation. The weekly revision session is adapted to the learner's level and educational needs."
+      ],
+      [
+        3,
+        "I reject this educational recommendation because imposing four additional hours of mathematics every day is excessive and does not account for Aminata Camara's actual needs, learning pace, or well-being. A preliminary educational assessment is necessary before any intervention."
+      ],
+      [
+        2,
+        "After reviewing Aminata Camara's learning journey, I recommend three sessions per week rather than daily exercises."
+      ],
+      [
+        1,
+        "After reviewing Aminata Camara's school results, I approve this educational recommendation for demonstration purposes. The proposed exercises will be adapted to her level and monitored by the teacher."
+      ]
+    ]);
+
+    const historyCommentHashesV03 = new Map([
+      [1, "cc50c0861e1e02ba7092e40d646fa55ba92956a7fe6186e0574eb0e859f92c45"],
+      [2, "bae629da8d7a9d38230531f201c0cfc1ceaeee1042a58c884b272807e3418303"],
+      [3, "69a8212421bf83e1c168df62c8224910536d2abb5fa86cafdf14fb87c343a79f"],
+      [5, "81c27744b09ad1e88f7ccfc6d3a647e50120321a2a1b29c71322ce89368be726"],
+      [8, "10e37a95e8cc5e139b912f7a48181d685535a1d4a52e2da31694bd42cfa5a6a3"],
+      [9, "f76046b5f913587adaa83cda54d938535f0ab765a7be03c1576b41b794ab4fb0"]
+    ]);
+
+    let historyTranslationGenerationV03 = 0;
+
+    async function translateHistoryCommentsV03() {
+      const generation = ++historyTranslationGenerationV03;
+      const language = currentLanguageV03;
+
+      const comments = Array.from(document.querySelectorAll(
+        "#history .history-item [data-history-comment-id]"
+      ));
+
+      for (const comment of comments) {
+        const id = Number(comment.dataset.historyCommentId);
+        const original = comment.dataset.historyOriginal ?? "";
+
+        if (language !== "en") {
+          comment.textContent = original;
+          continue;
+        }
+
+        const translated = historyTranslationsV03.get(id);
+        const expectedHash = historyCommentHashesV03.get(id);
+
+        if (!translated || !expectedHash) {
+          comment.textContent = original;
+          continue;
+        }
+
+        let valid = false;
+
+        try {
+          if (!globalThis.crypto?.subtle) {
+            throw new Error("SHA-256 indisponible");
+          }
+
+          const bytes = new TextEncoder().encode(original);
+          const digest = await crypto.subtle.digest("SHA-256", bytes);
+
+          const actualHash = Array.from(new Uint8Array(digest))
+            .map(byte => byte.toString(16).padStart(2, "0"))
+            .join("");
+
+          valid = actualHash === expectedHash;
+        } catch (_) {
+          valid = false;
+        }
+
+        if (
+          generation !== historyTranslationGenerationV03 ||
+          currentLanguageV03 !== language ||
+          !comment.isConnected
+        ) {
+          return;
+        }
+
+        comment.textContent = valid ? translated : original;
+      }
+    }
     function refreshHistoryLanguageV03() {
       document.querySelectorAll(
         "#history [data-history-recommendation-id]"
@@ -470,6 +613,7 @@ function openReview(card, recId, decision) {
         title.textContent =
           `${en ? "Recommendation" : "Recommandation"} ${id} · ${label}`;
       });
+      translateHistoryCommentsV03();
     }
   async function loadHistory(){if(!state.selected)return;const target=$("history");try{const result=await request(`/learners/${encodeURIComponent(state.selected)}/review-history`);const rows=arr(result,"history","historique","reviews","data","results");state.history=rows;target.replaceChildren();
     if(!rows.length){target.append(element("p","muted","Aucune décision enregistrée."));return;}
@@ -500,7 +644,7 @@ function openReview(card, recId, decision) {
 
       return `${en ? "Recommendation" : "Recommandation"} ${id} · ${label}`;
     }
-    rows.forEach(row=>{const box=element("div","history-item");const title=element("strong","",historyLabelV03(row));title.dataset.historyRecommendationId=String(pick(row,"id_recommandation","recommendationId")||"");title.dataset.historyStatus=String(pick(row,"decision","statut","status","statut_recommandation")||"en_attente");box.append(title);const c=pick(row,"commentaire","comment","contenu","justification");if(c)box.append(element("p","",String(c)));const d=pick(row,"date_validation","date","reviewedAt");if(d)box.append(element("small","",String(d)));target.append(box);});
+    rows.forEach(row=>{const box=element("div","history-item");const title=element("strong","",historyLabelV03(row));title.dataset.historyRecommendationId=String(pick(row,"id_recommandation","recommendationId")||"");title.dataset.historyStatus=String(pick(row,"decision","statut","status","statut_recommandation")||"en_attente");box.append(title);const c=pick(row,"commentaire","comment","contenu","justification");if(c){const comment=element("p","",String(c));comment.dataset.historyCommentId=String(pick(row,"id_recommandation","recommendationId")||"");comment.dataset.historyOriginal=String(c);box.append(comment);}const d=pick(row,"date_validation","date","reviewedAt");if(d)box.append(element("small","",String(d)));target.append(box);});
   }catch(e){target.replaceChildren(element("p","muted",e.message));}}
   async function selectLearner(id){state.selected=id;state.analysis=null;$("refresh").disabled=false;$("history-refresh").disabled=false;$("publish").disabled=false;
     const learner=state.learners.find(l=>idOf(l)===id);$("learner-name").textContent=learner?nameOf(learner):id;$("learner-subtitle").textContent=`${currentLanguageV03 === "en" ? "Learner ID" : "Identifiant"} : ${id} · ${currentLanguageV03 === "en" ? "Synthetic data" : "Données synthétiques"}`;
@@ -604,9 +748,40 @@ function openReview(card, recId, decision) {
     ["Aucune recommandation disponible.", "No recommendations available."],
     ["Commentaire de l'enseignant :", "Teacher's comment:"],
     ["Contenu pédagogique modifié :", "Modified educational content:"],
+    ["IA · DÉMONSTRATION", "AI · DEMONSTRATION"],
+    ["Traduction pédagogique FR/EN", "Pedagogical translation FR/EN"],
+    ["Données synthétiques uniquement. Aucune décision enseignante n'est modifiée.", "Synthetic data only. No teacher decision is modified."],
+    ["Sens de traduction", "Translation direction"],
+    ["Traduire avec l'IA", "Translate with AI"],
+    ["Traduction en cours...", "Translation in progress..."],
+    ["Traduction indisponible.", "Translation unavailable."],
+    ["EDUKAI AFRICA · Human-in-the-loop · Données pédagogiques synthétiques · V0.3 locale", "EDUKAI AFRICA · Human-in-the-loop · Synthetic educational data · Local V0.3"],
     ["Motivation de la décision (données synthétiques)", "Reason for the decision (synthetic data)"]
   ]);
 
+  // Traductions locales pour les donnees synthetiques V0.3.
+  const recommendationDemoTranslationsV03 = new Map([
+    [
+      "EDUKAI-V03-TEST-ROLLBACK-212 : proposer un accompagnement pedagogique progressif en mathematiques pour Aminata Camara.",
+      "EDUKAI-V03-TEST-ROLLBACK-212: provide progressive educational support in mathematics for Aminata Camara."
+    ],
+    [
+      "EDUKAI-V03-TEST-ROLLBACK-212 : proposer un accompagnement pédagogique progressif en mathématiques pour Aminata Camara.",
+      "EDUKAI-V03-TEST-ROLLBACK-212: provide progressive educational support in mathematics for Aminata Camara."
+    ],
+    [
+      "Recommandation reservee au test d'annulation d'une validation humaine V0.3.",
+      "Recommendation reserved for testing the cancellation of a human validation in V0.3."
+    ],
+    [
+      "Recommandation réservée au test d'annulation d'une validation humaine V0.3.",
+      "Recommendation reserved for testing the cancellation of a human validation in V0.3."
+    ]
+  ]);
+
+  for (const [fr, en] of recommendationDemoTranslationsV03) {
+    translationsV03.set(fr, en);
+  }
   const originalTextV03 = new WeakMap();
   let currentLanguageV03 = "fr";
   let translatingV03 = false;
@@ -669,6 +844,79 @@ function openReview(card, recId, decision) {
   `;
   document.head.append(languageStyleV03);
 
+  function translateRuleTextV03(text) {
+    const subjects = {
+      "Mathématiques": "mathematics",
+      "Sciences": "science",
+      "Langues": "languages",
+      "Assiduité": "attendance",
+      "Mathematics": "mathematics",
+      "Science": "science",
+      "Languages": "languages",
+      "Attendance": "attendance"
+    };
+
+    const subjectEN = value => subjects[value] || value;
+
+    let match;
+
+    match = /^Observation : (.+)$/.exec(text);
+    if (match) {
+      const translated = translateRuleTextV03(match[1]);
+      return translated === null
+        ? null
+        : `Observation: ${translated}`;
+    }
+
+    match = /^Action recommandée : (.+)$/.exec(text);
+    if (match) {
+      const translated = translateRuleTextV03(match[1]);
+      return translated === null
+        ? null
+        : `Recommended action: ${translated}`;
+    }
+
+    match = /^Progression de (\d+) points\.$/.exec(text);
+    if (match) {
+      return `Improvement of ${match[1]} points.`;
+    }
+
+    match = /^Baisse de (\d+) points\.$/.exec(text);
+    if (match) {
+      return `Decrease of ${match[1]} points.`;
+    }
+
+    match = /^Progression de (\d+) points, la plus faible parmi les matieres analysees\.$/.exec(text);
+    if (match) {
+      return `Improvement of ${match[1]} points, the lowest among the subjects analyzed.`;
+    }
+
+    match = /^Baisse de l'assiduite de (\d+) points\.$/.exec(text);
+    if (match) {
+      return `Attendance decreased by ${match[1]} points.`;
+    }
+
+    match = /^Examiner les difficultes en (.+) et proposer un accompagnement cible\.$/.exec(text);
+    if (match) {
+      return `Examine difficulties in ${subjectEN(match[1])} and provide targeted support.`;
+    }
+
+    match = /^Examiner avec l'enseignant les besoins eventuels de renforcement en (.+)\.$/.exec(text);
+    if (match) {
+      return `Review potential support needs in ${subjectEN(match[1])} with the teacher.`;
+    }
+
+    match = /^Valoriser les progres en (.+) et identifier les pratiques pedagogiques efficaces\.$/.exec(text);
+    if (match) {
+      return `Recognize progress in ${subjectEN(match[1])} and identify effective teaching practices.`;
+    }
+
+    if (text === "Echanger avec l'apprenant pour comprendre les causes possibles de cette evolution.") {
+      return "Discuss with the learner to understand the possible causes of this change.";
+    }
+
+    return null;
+  }
   function applyLanguageV03() {
     if (translatingV03) return;
     translatingV03 = true;
@@ -738,6 +986,29 @@ function openReview(card, recId, decision) {
 
           continue;
         }
+        const ruleTranslationV03 = translateRuleTextV03(trimmed);
+
+        if (ruleTranslationV03 !== null) {
+          if (existing === undefined) {
+            originalTextV03.set(node, original);
+          }
+
+          const leading = original.match(/^\s*/)?.[0] || "";
+          const trailing = original.match(/\s*$/)?.[0] || "";
+
+          const translated = currentLanguageV03 === "en"
+            ? ruleTranslationV03
+            : trimmed;
+
+          const nextValue = leading + translated + trailing;
+
+          if (node.nodeValue !== nextValue) {
+            node.nodeValue = nextValue;
+          }
+
+          continue;
+        }
+
         if (!translationsV03.has(trimmed)) {
           continue;
         }
@@ -785,6 +1056,15 @@ function openReview(card, recId, decision) {
     currentLanguageV03 = languageSelectV03.value;
     applyLanguageV03();
     refreshHistoryLanguageV03();
+
+    if (state.selected) {
+      const subtitle = $("learner-subtitle");
+      if (subtitle) {
+        subtitle.textContent = currentLanguageV03 === "en"
+          ? `Learner ID : ${state.selected} · Synthetic data`
+          : `Identifiant : ${state.selected} · Données synthétiques`;
+      }
+    }
 
     document.querySelectorAll(".review-form").forEach(form => {
       if (typeof form.updateReviewLanguage === "function") {

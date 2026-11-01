@@ -88,6 +88,105 @@ async function translatePedagogicalText({
   };
 }
 
+const translationCacheV03 = new Map();
+const CACHE_MAX_V03 = 100;
+const CACHE_TTL_MS_V03 = 15 * 60 * 1000;
+
+async function translatePedagogicalBatch({
+  texts,
+  sourceLanguage = "fr",
+  targetLanguage = "en",
+  translateOne = translatePedagogicalText
+}) {
+  if (!Array.isArray(texts) || texts.length < 1 || texts.length > 10) {
+    throw new TypeError("Le lot doit contenir entre 1 et 10 textes.");
+  }
+
+  validateLanguage(sourceLanguage);
+  validateLanguage(targetLanguage);
+
+  if (typeof translateOne !== "function") {
+    throw new TypeError("Moteur de traduction invalide.");
+  }
+
+  for (const text of texts) {
+    if (typeof text !== "string" || text.length > 1000) {
+      throw new TypeError("Texte invalide ou trop long.");
+    }
+  }
+
+  const results = [];
+
+  for (const original of texts) {
+    if (!original.trim() || sourceLanguage === targetLanguage) {
+      results.push({
+        original,
+        translated: original,
+        sourceLanguage,
+        targetLanguage,
+        translatedBy: "none"
+      });
+      continue;
+    }
+
+    const key = JSON.stringify([
+      sourceLanguage,
+      targetLanguage,
+      original
+    ]);
+
+    const cached = translationCacheV03.get(key);
+
+    if (cached && Date.now() - cached.createdAt < CACHE_TTL_MS_V03) {
+      results.push({
+        ...cached.result,
+        translatedBy: "cache"
+      });
+      continue;
+    }
+
+    if (cached) {
+      translationCacheV03.delete(key);
+    }
+
+    const result = await translateOne({
+      text: original,
+      sourceLanguage,
+      targetLanguage
+    });
+
+    if (
+      !result ||
+      typeof result.translated !== "string" ||
+      !result.translated.trim()
+    ) {
+      throw new Error("Resultat de traduction invalide.");
+    }
+
+    const safeResult = {
+      ...result,
+      original,
+      sourceLanguage,
+      targetLanguage
+    };
+
+    if (translationCacheV03.size >= CACHE_MAX_V03) {
+      const oldestKey = translationCacheV03.keys().next().value;
+      translationCacheV03.delete(oldestKey);
+    }
+
+    translationCacheV03.set(key, {
+      result: safeResult,
+      createdAt: Date.now()
+    });
+
+    results.push({ ...safeResult });
+  }
+
+  return results;
+}
+
 module.exports = {
-  translatePedagogicalText
+  translatePedagogicalText,
+  translatePedagogicalBatch
 };

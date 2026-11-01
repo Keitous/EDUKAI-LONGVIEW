@@ -1,6 +1,9 @@
 "use strict";
 
 const express = require("express");
+const {
+  canTeacherAccessLearner
+} = require("./pedagogical-access-v03");
 
 const {
   getAllLearners,
@@ -40,7 +43,19 @@ function createV03LearnerRouter() {
 
   router.get("/learners", async (req, res, next) => {
     try {
-      const learners = await getAllLearners();
+      const allLearners = await getAllLearners();
+      const teacherId = req.session?.auth?.id_enseignant;
+
+      const learners = allLearners.filter(learner => {
+        const learnerId = String(
+          learner.id_apprenant ||
+          learner.learnerId ||
+          learner.id ||
+          ""
+        );
+
+        return canTeacherAccessLearner(teacherId, learnerId);
+      });
 
       return res.status(200).json({
         success: true,

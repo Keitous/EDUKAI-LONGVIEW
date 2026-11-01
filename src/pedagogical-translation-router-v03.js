@@ -4,7 +4,8 @@ const express = require("express");
 const { rateLimit } = require("express-rate-limit");
 
 const {
-  translatePedagogicalText
+  translatePedagogicalText,
+  translatePedagogicalBatch
 } = require("./pedagogical-translation-service-v03");
 
 function createPedagogicalTranslationRouter(
@@ -90,6 +91,70 @@ function createPedagogicalTranslationRouter(
     }
   );
 
+  router.post(
+    "/translate-batch",
+    requireAuthenticatedTeacher,
+    requireTrustedWriteOrigin,
+    limiter,
+    async (req, res) => {
+      const body = req.body || {};
+      const texts = body.texts;
+
+      if (
+        !Array.isArray(texts) ||
+        texts.length < 1 ||
+        texts.length > 10 ||
+        texts.some(
+          text =>
+            typeof text !== "string" ||
+            !text.trim() ||
+            text.length > 1000
+        ) ||
+        !["fr", "en"].includes(body.sourceLanguage) ||
+        !["fr", "en"].includes(body.targetLanguage)
+      ) {
+        return res.status(400).json({
+          error: "Lot de traduction invalide."
+        });
+      }
+
+      const allowedDemoTexts = new Set([
+        "Progression de 25 points.",
+        "Accompagnement pedagogique cible.",
+        "L'enseignant recommande trois exercices de mathematiques par semaine.",
+        "The teacher recommends a weekly mathematics review session."
+      ]);
+
+      if (texts.some(text => !allowedDemoTexts.has(text))) {
+        return res.status(403).json({
+          error: "Traduction reservee aux textes synthetiques autorises."
+        });
+      }
+
+      try {
+        const results = await translatePedagogicalBatch({
+          texts,
+          sourceLanguage: body.sourceLanguage,
+          targetLanguage: body.targetLanguage
+        });
+
+        return res.status(200).json({
+          success: true,
+          results,
+          syntheticData: true
+        });
+      } catch (error) {
+        console.error(
+          "Erreur traduction batch EDUKAI :",
+          error.status || error.code || "Erreur"
+        );
+
+        return res.status(503).json({
+          error: "Service de traduction temporairement indisponible."
+        });
+      }
+    }
+  );
   return router;
 }
 
