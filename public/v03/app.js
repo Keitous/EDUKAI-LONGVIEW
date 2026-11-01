@@ -238,7 +238,7 @@
 
     container.append(svg);
   }
-  function drawMetrics(metrics){const target=$("metrics");target.replaceChildren();metrics.forEach(m=>{const box=element("div","metric");box.append(element("span","",m.label),element("strong","",m.delta===null?"—":`${m.delta>0?"+":""}${m.delta}`));target.append(box);});}
+  function drawMetrics(metrics){const target=$("metrics");target.replaceChildren();metrics.forEach(m=>{const box=element("div","metric");box.append(element("span","",({mathematics:"Mathématiques",science:"Sciences",language:"Langues",attendance:"Assiduité"}[m.label] || m.label)),element("strong","",m.delta===null?"—":`${m.delta>0?"+":""}${m.delta}`));target.append(box);});}
   function normalizeRecommendations(payload){return arr(payload,"recommendations","recommandations","data","results");}
   function renderRecommendations(payload) {
   const target = $("recommendations");
@@ -442,8 +442,6 @@ function openReview(card, recId, decision) {
     const pending=state.history.filter(r=>String(pick(r,"statut","recommendationStatus","statut_recommandation")||"").toLowerCase()==="en_attente");
     if(pending.length)renderRecommendations({recommendations:pending});
   }catch(e){notify(`Historique : ${e.message}`,true);}}
-  async function loadHistory(){if(!state.selected)return;const target=$("history");try{const result=await request(`/learners/${encodeURIComponent(state.selected)}/review-history`);const rows=arr(result,"history","historique","reviews","data","results");state.history=rows;target.replaceChildren();
-    if(!rows.length){target.append(element("p","muted","Aucune décision enregistrée."));return;}
     function refreshHistoryLanguageV03() {
       document.querySelectorAll(
         "#history [data-history-recommendation-id]"
@@ -473,6 +471,8 @@ function openReview(card, recId, decision) {
           `${en ? "Recommendation" : "Recommandation"} ${id} · ${label}`;
       });
     }
+  async function loadHistory(){if(!state.selected)return;const target=$("history");try{const result=await request(`/learners/${encodeURIComponent(state.selected)}/review-history`);const rows=arr(result,"history","historique","reviews","data","results");state.history=rows;target.replaceChildren();
+    if(!rows.length){target.append(element("p","muted","Aucune décision enregistrée."));return;}
     function historyLabelV03(row) {
       const id = pick(row, "id_recommandation", "recommendationId") || "—";
       const rawStatus = String(
@@ -503,7 +503,7 @@ function openReview(card, recId, decision) {
     rows.forEach(row=>{const box=element("div","history-item");const title=element("strong","",historyLabelV03(row));title.dataset.historyRecommendationId=String(pick(row,"id_recommandation","recommendationId")||"");title.dataset.historyStatus=String(pick(row,"decision","statut","status","statut_recommandation")||"en_attente");box.append(title);const c=pick(row,"commentaire","comment","contenu","justification");if(c)box.append(element("p","",String(c)));const d=pick(row,"date_validation","date","reviewedAt");if(d)box.append(element("small","",String(d)));target.append(box);});
   }catch(e){target.replaceChildren(element("p","muted",e.message));}}
   async function selectLearner(id){state.selected=id;state.analysis=null;$("refresh").disabled=false;$("history-refresh").disabled=false;$("publish").disabled=false;
-    const learner=state.learners.find(l=>idOf(l)===id);$("learner-name").textContent=learner?nameOf(learner):id;$("learner-subtitle").textContent=`Identifiant : ${id} · Données synthétiques`;
+    const learner=state.learners.find(l=>idOf(l)===id);$("learner-name").textContent=learner?nameOf(learner):id;$("learner-subtitle").textContent=`${currentLanguageV03 === "en" ? "Learner ID" : "Identifiant"} : ${id} · ${currentLanguageV03 === "en" ? "Synthetic data" : "Données synthétiques"}`;
     document.querySelectorAll(".learner").forEach(b=>b.classList.toggle("active",b.querySelector("small")?.textContent===id));
     $("chart").replaceChildren(element("p","muted","Chargement de l'analyse…"));
     try{const [analysis,recs]=await Promise.all([request(`/learners/${encodeURIComponent(id)}/analysis`),request(`/learners/${encodeURIComponent(id)}/recommendations`)]);
