@@ -5,8 +5,8 @@ const {
 } = require("./db/postgres-pedagogical-v03");
 
 const {
-  canTeacherAccessLearner
-} = require("./pedagogical-access-v03");
+  canTeacherAccessAssignedLearner
+} = require("./pedagogical-assignment-access-v03");
 
 async function requireRecommendationReviewAccess(
   req,
@@ -53,7 +53,7 @@ async function requireRecommendationReviewAccess(
 
     const learnerId = result.rows[0].id_apprenant;
 
-    if (!canTeacherAccessLearner(teacherId, learnerId)) {
+    if (!(await canTeacherAccessAssignedLearner(teacherId, learnerId))) {
       return res.status(403).json({
         error: "Acces pedagogique non autorise."
       });

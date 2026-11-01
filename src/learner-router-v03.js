@@ -2,8 +2,8 @@
 
 const express = require("express");
 const {
-  canTeacherAccessLearner
-} = require("./pedagogical-access-v03");
+  canTeacherAccessAssignedLearner
+} = require("./pedagogical-assignment-access-v03");
 
 const {
   getAllLearners,
@@ -46,7 +46,9 @@ function createV03LearnerRouter() {
       const allLearners = await getAllLearners();
       const teacherId = req.session?.auth?.id_enseignant;
 
-      const learners = allLearners.filter(learner => {
+      const learners = [];
+
+      for (const learner of allLearners) {
         const learnerId = String(
           learner.id_apprenant ||
           learner.learnerId ||
@@ -54,8 +56,10 @@ function createV03LearnerRouter() {
           ""
         );
 
-        return canTeacherAccessLearner(teacherId, learnerId);
-      });
+        if (await canTeacherAccessAssignedLearner(teacherId, learnerId)) {
+          learners.push(learner);
+        }
+      }
 
       return res.status(200).json({
         success: true,
@@ -74,6 +78,14 @@ function createV03LearnerRouter() {
       if (!/^LRN[0-9]{3,10}$/.test(id)) {
         return res.status(400).json({
           error: "Identifiant apprenant invalide."
+        });
+      }
+
+      const teacherId = req.session?.auth?.id_enseignant;
+
+      if (!await canTeacherAccessAssignedLearner(teacherId, id)) {
+        return res.status(403).json({
+          error: "Acces pedagogique non autorise."
         });
       }
 
@@ -104,6 +116,14 @@ function createV03LearnerRouter() {
         });
       }
 
+      const teacherId = req.session?.auth?.id_enseignant;
+
+      if (!await canTeacherAccessAssignedLearner(teacherId, id)) {
+        return res.status(403).json({
+          error: "Acces pedagogique non autorise."
+        });
+      }
+
       const analysis = await analyzeLearner(id);
 
       if (!analysis) {
@@ -128,6 +148,14 @@ function createV03LearnerRouter() {
       if (!/^LRN[0-9]{3,10}$/.test(id)) {
         return res.status(400).json({
           error: "Identifiant apprenant invalide."
+        });
+      }
+
+      const teacherId = req.session?.auth?.id_enseignant;
+
+      if (!await canTeacherAccessAssignedLearner(teacherId, id)) {
+        return res.status(403).json({
+          error: "Acces pedagogique non autorise."
         });
       }
 

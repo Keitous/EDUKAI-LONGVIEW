@@ -7,8 +7,8 @@ const {
 } = require("./pedagogical-workflow-v03");
 
 const {
-  requireLearnerPublicationAccess
-} = require("./pedagogical-access-v03");
+  canTeacherAccessAssignedLearner
+} = require("./pedagogical-assignment-access-v03");
 
 function createPedagogicalPublicationRouter(
   requireAuthenticatedTeacher
@@ -24,7 +24,6 @@ function createPedagogicalPublicationRouter(
   router.post(
     "/learners/:id/publish",
     requireAuthenticatedTeacher,
-    requireLearnerPublicationAccess,
     async (req, res, next) => {
       try {
         const learnerId = req.params.id;
@@ -41,10 +40,22 @@ function createPedagogicalPublicationRouter(
           !auth ||
           auth.verifiedByServer !== true ||
           auth.role !== "enseignant" ||
-          !auth.id_enseignant
+          !Number.isSafeInteger(auth.id_enseignant) ||
+          auth.id_enseignant <= 0
         ) {
           return res.status(403).json({
             error: "Enseignant non autorise."
+          });
+        }
+
+        if (
+          !(await canTeacherAccessAssignedLearner(
+            auth.id_enseignant,
+            learnerId
+          ))
+        ) {
+          return res.status(403).json({
+            error: "Acces pedagogique non autorise."
           });
         }
 

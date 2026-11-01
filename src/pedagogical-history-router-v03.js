@@ -7,8 +7,8 @@ const {
 } = require("./db/postgres-pedagogical-v03");
 
 const {
-  canTeacherAccessLearner
-} = require("./pedagogical-access-v03");
+  canTeacherAccessAssignedLearner
+} = require("./pedagogical-assignment-access-v03");
 
 function createPedagogicalHistoryRouter(
   requireAuthenticatedTeacher
@@ -35,7 +35,7 @@ function createPedagogicalHistoryRouter(
           });
         }
 
-        if (!canTeacherAccessLearner(teacherId, learnerId)) {
+        if (!(await canTeacherAccessAssignedLearner(teacherId, learnerId))) {
           return res.status(403).json({
             error: "Acces pedagogique non autorise."
           });
