@@ -15,3 +15,10 @@ logs/
 
 # Fichiers systeme
 .DS_Store
+# Exclusions locales EDUKAI V0.3
+BACKUPS/
+demo-video/
+*.backup-*
+
+# Sauvegardes locales de gitignore
+.gitignore.before-*.bak

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>EDUKAI AFRICA | Tableau de bord V0.3</title>
+  <link rel="stylesheet" href="/v03/styles.css">
+  <script src="/v03/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">E</span><div><strong>EDUKAI <em>AFRICA</em></strong><small>LongView Agent · V0.3</small></div></div>
+    <div class="topright"><span class="pill">Données synthétiques · Démonstration locale</span></div>
+  </header>
+  <main class="shell">
+    <section id="login-panel" class="login card">
+      <div class="eyebrow">ESPACE ENSEIGNANT</div>
+      <h1>Bienvenue sur LongView</h1>
+      <p>Connectez-vous avec le compte enseignant de démonstration V0.3.</p>
+      <form id="login-form">
+        <label for="identifier">Identifiant</label>
+        <input id="identifier" autocomplete="username" value="ENS-DEMO-001" required maxlength="100">
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" autocomplete="current-password" required maxlength="200">
+        <button class="primary" type="submit">Se connecter</button>
+      </form>
+      <p class="hint">Votre mot de passe n'est pas enregistré dans cette page.</p>
+    </section>
+    <section id="dashboard" hidden>
+      <div class="intro"><div><div class="eyebrow">TABLEAU DE BORD PÉDAGOGIQUE</div><h1>Suivi longitudinal des apprenants</h1><p>Des preuves pour éclairer la décision de l'enseignant.</p></div><span class="pill">Validation humaine obligatoire</span></div>
+      <div class="stats"><article class="card stat"><span>Apprenants</span><strong id="count-learners">—</strong><small>Dossiers disponibles</small></article><article class="card stat"><span>Période</span><strong>2023–2026</strong><small>Trois années scolaires</small></article><article class="card stat"><span>Analyse</span><strong>Traçable</strong><small>Recommandations explicables</small></article></div>
+      <div class="layout"><aside class="card side"><h2>Apprenants</h2><p class="muted">Sélectionnez un dossier</p><div id="learners-list" class="learner-list"></div></aside>
+        <div class="workspace"><section class="card"><div class="section-head"><div><div class="eyebrow">DOSSIER PÉDAGOGIQUE</div><h2 id="learner-name">Choisissez un apprenant</h2><p id="learner-subtitle" class="muted">Les données proviennent du serveur V0.3.</p></div><button id="refresh" class="ghost" disabled>Actualiser</button></div>
+          <h3>Progression par indicateur</h3><div id="chart" class="chart"><p class="muted">Sélectionnez un apprenant pour afficher sa progression.</p></div><div id="metrics" class="metrics"></div></section>
+          <section class="card"><div class="section-head"><div><div class="eyebrow">AIDE À LA DÉCISION</div><h2>Recommandations pédagogiques</h2></div><button id="publish" class="primary" disabled>Publier pour validation</button></div><p class="muted">Les suggestions doivent être examinées par un enseignant avant toute utilisation.</p><div id="recommendations" class="recommendations"><p class="muted">Aucune recommandation affichée.</p></div></section>
+          <section class="card" id="translation-demo">
+            <div class="section-head">
+              <div>
+                <div class="eyebrow">IA · DÉMONSTRATION</div>
+                <h2>Traduction pédagogique FR/EN</h2>
+              </div>
+            </div>
+            <p class="muted">Données synthétiques uniquement. Aucune décision enseignante n'est modifiée.</p>
+            <label for="translation-direction">Sens de traduction</label>
+            <select id="translation-direction">
+              <option value="fr-en">Français vers English</option>
+              <option value="en-fr">English vers Français</option>
+            </select>
+            <p id="translation-source" class="muted"></p>
+            <button id="translation-submit" class="ghost" type="button">Traduire avec l'IA</button>
+            <p id="translation-result" role="status" aria-live="polite"></p>
+          </section>
+          <section class="card"><div class="section-head"><div><div class="eyebrow">TRAÇABILITÉ</div><h2>Historique des décisions</h2></div><button id="history-refresh" class="ghost" disabled>Actualiser</button></div><div id="history"><p class="muted">Choisissez un apprenant.</p></div></section>
+        </div></div>
+    </section>
+    <div id="notice" role="status" aria-live="polite"></div>
+  </main>
+  <footer>EDUKAI AFRICA · Human-in-the-loop · Données pédagogiques synthétiques · V0.3 locale</footer>
+</body>
+</html>
