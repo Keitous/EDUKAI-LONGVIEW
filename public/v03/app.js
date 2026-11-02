@@ -485,11 +485,48 @@ function openReview(card, recId, decision) {
     form.updateReviewLanguage = updateReviewLanguage;
     card.append(form);
   }
-  async function loadPublished(){if(!state.selected)return;try{const result=await request(`/learners/${encodeURIComponent(state.selected)}/review-history`);
-    state.history=arr(result,"history","historique","reviews","data","results");
-    const pending=state.history.filter(r=>String(pick(r,"statut","recommendationStatus","statut_recommandation")||"").toLowerCase()==="en_attente");
-    if(pending.length)renderRecommendations({recommendations:pending});
-  }catch(e){notify(`Historique : ${e.message}`,true);}}
+  async function loadPublished() {
+    if (!state.selected) return;
+
+    const learnerId = state.selected;
+
+    try {
+      const result = await request(
+        `/learners/${encodeURIComponent(learnerId)}/review-history`
+      );
+
+      if (state.selected !== learnerId) return;
+
+      state.history = arr(
+        result, "history", "historique", "reviews", "data", "results"
+      );
+
+      const pending = state.history.filter(row => {
+        const recId = pick(
+          row, "id_recommandation", "recommendationId", "id"
+        );
+
+        const status = String(
+          pick(
+            row, "statut", "recommendationStatus",
+            "statut_recommandation", "status"
+          ) || ""
+        ).toLowerCase();
+
+        return recId != null &&
+          ["en_attente", "pending", "pending_teacher_review"].includes(status) &&
+          !pick(row, "id_validation", "decision");
+      });
+
+      if (pending.length) {
+        renderRecommendations({ recommendations: pending });
+      }
+    } catch (error) {
+      if (state.selected === learnerId) {
+        notify(`Historique : ${error.message}`, true);
+      }
+    }
+  }
     // Traductions locales des commentaires synthetiques de demonstration.
     // Les textes originaux ne sont jamais modifies dans PostgreSQL.
     const historyTranslationsV03 = new Map([
