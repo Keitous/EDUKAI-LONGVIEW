@@ -609,8 +609,25 @@ if (toolName === "read_pedagogical_guidance") {
               "The MCP tool returned an error."
           });
 
-          console.log(
-            `[MCP TOOL ERROR] ${toolName}`
+          const diagnosticText = textParts.join("\n");
+
+          const errorCategory =
+            /was not found/i.test(diagnosticText)
+              ? "LEARNER_NOT_FOUND"
+              : /permission denied|insufficient privilege/i.test(diagnosticText)
+                ? "DATABASE_PERMISSION"
+                : /relation .* does not exist/i.test(diagnosticText)
+                  ? "DATABASE_SCHEMA"
+                  : /connect|timeout|ECONNREFUSED|ENOTFOUND/i.test(diagnosticText)
+                    ? "DATABASE_CONNECTION_OR_TIMEOUT"
+                    : /Unable to analyze/i.test(diagnosticText)
+                      ? "ANALYSIS_ERROR"
+                      : /Unable to retrieve evidence/i.test(diagnosticText)
+                        ? "EVIDENCE_ERROR"
+                        : "UNCLASSIFIED_MCP_ERROR";
+
+          console.error(
+            `[MCP DIAGNOSTIC] ${toolName}: ${errorCategory}`
           );
         } else {
           console.log(
