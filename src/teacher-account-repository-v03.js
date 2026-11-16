@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 const { pool } = require("./db/postgres-v03");
 
@@ -17,7 +17,9 @@ async function findTeacherAccount(identifier) {
     await client.query("BEGIN READ ONLY");
 
     try {
-      await client.query("SET LOCAL ROLE edukai_auth_app");
+      if (process.env.EDUKAI_V03_MODE !== "nairobi_cloud") {
+        await client.query("SET LOCAL ROLE edukai_auth_app");
+      }
 
       const result = await client.query(
         `SELECT
