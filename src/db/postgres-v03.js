@@ -1,4 +1,21 @@
-﻿"use strict";
+"use strict";
+// EDUKAI_CLOUD_PATCH_V1
+if (process.env.EDUKAI_V03_MODE === "nairobi_cloud") {
+const { createCloudPool } =
+    require("../nairobi-cloud-config");
+
+const pool = createCloudPool();
+
+pool.on("error", error => {
+    console.error(
+        "[EDUKAI Cloud Auth]",
+        error.message
+    );
+});
+
+module.exports = { pool };
+} else {
+"use strict";
 
 const { Pool } = require("pg");
 
@@ -29,3 +46,5 @@ pool.on("error", (error) => {
 });
 
 module.exports = { pool };
+
+}

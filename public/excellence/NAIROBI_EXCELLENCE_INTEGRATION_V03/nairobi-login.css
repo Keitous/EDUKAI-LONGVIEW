@@ -1,0 +1,337 @@
+:root {
+  font-family: "Segoe UI",Arial,sans-serif;
+  color:#08234e;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:#061c48; }
+.login-layout {
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1.08fr 1fr;
+}
+.brand-panel {
+  position:relative;
+  min-height:720px;
+  overflow:hidden;
+  color:white;
+  padding:36px 5%;
+  background:
+    radial-gradient(circle at 90% 0%,#007ca9 0%,transparent 42%),
+    linear-gradient(145deg,#061638,#073d7b 70%,#061c48);
+}
+.brand-panel:after {
+  content:"";
+  position:absolute;
+  width:900px;height:240px;
+  border-top:4px solid #1be7e5;
+  border-radius:50%;
+  bottom:-125px;left:-100px;
+  transform:rotate(-8deg);
+  box-shadow:0 -12px 60px #00d4eb60;
+}
+.brand { display:flex;gap:16px;align-items:center; }
+.brand-symbol {
+  width:68px;height:68px;
+  display:grid;place-items:center;
+  color:#27f4ef;font-size:65px;
+}
+.brand strong {
+  display:block;font-size:32px;letter-spacing:2px;
+}
+.brand span {
+  display:block;color:#32e6ed;
+  font-size:24px;font-weight:700;
+}
+.hero { text-align:center;margin-top:110px; }
+.academic-icon { color:#22f1ee;font-size:65px; }
+.hero h1 {
+  margin:5px 0 14px;
+  font-size:clamp(35px,4vw,66px);
+  white-space:nowrap;
+}
+.hero em { color:#27e5ed;font-style:italic; }
+.hero-rule {
+  height:3px;width:75%;
+  background:linear-gradient(90deg,transparent,#22efed,transparent);
+  margin:18px auto;
+}
+.eyebrow { font-size:17px;letter-spacing:3px; }
+.tagline {
+  font-size:clamp(22px,2.3vw,34px);
+  font-style:italic;line-height:1.35;
+  max-width:620px;margin:34px auto;
+}
+.features {
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-top:45px;text-align:center;
+  position:relative;z-index:1;
+}
+.features div { display:grid;justify-items:center;gap:10px; }
+.features span {
+  display:grid;place-items:center;
+  width:65px;height:65px;
+  border:2px solid #24e8ef;
+  border-radius:50%;color:#26eff0;
+  font-size:34px;
+}
+.features b { font-size:15px; }
+.cityline {
+  position:absolute;bottom:0;left:0;right:0;
+  height:115px;display:flex;
+  align-items:flex-end;justify-content:space-around;
+  opacity:.5;
+}
+.cityline span {
+  width:7%;height:60%;
+  background:linear-gradient(#00c9e8,#03446e);
+  border:1px solid #00d8ee;
+}
+.cityline span:nth-child(2n) { height:90%; }
+.cityline span:nth-child(3n) { height:45%; }
+.cityline span:nth-child(5n) { height:110%; }
+.form-side {
+  display:grid;place-items:center;
+  padding:38px;
+  background:
+    radial-gradient(circle at 95% 15%,#0368a0 0%,transparent 42%),
+    linear-gradient(135deg,#05265a,#071c47);
+}
+.login-card {
+  width:min(100%,610px);
+  padding:38px 42px 30px;
+  border-radius:34px;
+  background:linear-gradient(145deg,#fff,#e5f4ff);
+  box-shadow:0 25px 65px #00112b75;
+  border:2px solid #ffffffc0;
+}
+.language-row {
+  display:flex;align-items:center;justify-content:flex-end;
+  gap:8px;
+}
+.language-row select {
+  padding:10px;border:1px solid #a9c3e5;
+  border-radius:12px;background:#eff7ff;
+  color:#09224c;font-size:16px;
+}
+.teacher-icon {
+  width:88px;height:88px;
+  display:grid;place-items:center;
+  margin:4px auto 22px;
+  background:linear-gradient(135deg,#0084b5,#075084);
+  color:white;font-size:48px;
+  border-radius:23px;
+  box-shadow:0 8px 18px #087ba455;
+}
+.login-card h2 {
+  text-align:center;
+  font-size:clamp(27px,3vw,40px);
+  margin:10px 0;
+}
+.subtitle {
+  text-align:center;font-size:18px;
+  line-height:1.5;margin-bottom:28px;
+}
+#login-form { display:grid;gap:10px; }
+#login-form label {
+  font-size:16px;font-weight:700;
+}
+#login-form input {
+  display:block;width:100%;
+  min-height:56px;
+  padding:14px 16px;
+  border:1px solid #abc6e7;
+  background:#f8fcff;
+  color:#08234e;
+  border-radius:13px;
+  font-size:17px;
+  outline-color:#04c6cb;
+}
+.password-wrap { position:relative; }
+.password-wrap input { padding-right:60px!important; }
+#toggle-password {
+  position:absolute;right:8px;top:7px;
+  width:42px;height:42px;
+  background:transparent;border:0;
+  font-size:24px;color:#1b4c80;
+  cursor:pointer;
+}
+.submit {
+  margin-top:20px;min-height:62px;
+  border:0;border-radius:14px;
+  background:linear-gradient(90deg,#00b9c6,#008cae);
+  color:white;font-size:21px;font-weight:700;
+  cursor:pointer;
+  box-shadow:0 7px 16px #008eaa44;
+}
+.submit:disabled { opacity:.6;cursor:wait; }
+#status { min-height:22px;text-align:center; }
+.demo-note {
+  display:flex;gap:14px;align-items:center;
+  padding:14px;border-radius:15px;
+  background:#d5e9f8;
+  font-size:14px;line-height:1.5;
+}
+.demo-note span { font-size:30px;color:#075b8a; }
+.demo-note p { margin:0; }
+@media(max-width:950px) {
+  .login-layout { grid-template-columns:1fr; }
+  .brand-panel { min-height:480px; }
+  .hero { margin-top:35px; }
+  .features { margin-top:20px; }
+  .cityline { height:55px; }
+}
+@media(max-width:540px) {
+  .brand-panel { padding:22px;min-height:450px; }
+  .brand strong { font-size:22px; }
+  .brand span { font-size:17px; }
+  .hero h1 { white-space:normal; }
+  .eyebrow { font-size:12px; }
+  .features span { width:45px;height:45px;font-size:24px; }
+  .features b { font-size:11px; }
+  .form-side { padding:15px; }
+  .login-card { padding:24px 20px;border-radius:22px; }
+}
+
+/* J02.06.29.13.30 - Nairobi Excellence compact desktop */
+@media (min-width: 951px) and (max-height: 950px) {
+
+  .brand-panel {
+    min-height: 100vh;
+    padding-top: 22px;
+    padding-bottom: 20px;
+  }
+
+  .brand-symbol {
+    width: 52px;
+    height: 52px;
+    font-size: 50px;
+  }
+
+  .brand strong {
+    font-size: 27px;
+  }
+
+  .brand span {
+    font-size: 19px;
+  }
+
+  .hero {
+    margin-top: clamp(20px, 5vh, 48px);
+  }
+
+  .academic-icon {
+    font-size: 43px;
+  }
+
+  .hero h1 {
+    font-size: clamp(34px, 3.6vw, 55px);
+    margin: 4px 0 8px;
+  }
+
+  .hero-rule {
+    margin: 10px auto;
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  .tagline {
+    font-size: clamp(19px, 2vw, 27px);
+    margin: 18px auto;
+  }
+
+  .features {
+    margin-top: 22px;
+  }
+
+  .features span {
+    width: 49px;
+    height: 49px;
+    font-size: 25px;
+  }
+
+  .features b {
+    font-size: 13px;
+  }
+
+  .cityline {
+    height: 58px;
+    opacity: .35;
+  }
+
+  .form-side {
+    padding: 18px 28px;
+  }
+
+  .login-card {
+    padding: 20px 30px;
+    border-radius: 26px;
+  }
+
+  .teacher-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 34px;
+    margin: 0 auto 12px;
+  }
+
+  .login-card h2 {
+    font-size: clamp(25px, 2.5vw, 34px);
+    margin: 5px 0;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+
+  #login-form {
+    gap: 7px;
+  }
+
+  #login-form input {
+    min-height: 45px;
+    padding: 10px 14px;
+    font-size: 15px;
+  }
+
+  #toggle-password {
+    top: 2px;
+  }
+
+  .submit {
+    min-height: 49px;
+    margin-top: 12px;
+    font-size: 18px;
+  }
+
+  #status {
+    min-height: 15px;
+    margin: 8px 0;
+  }
+
+  .demo-note {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 951px) and (max-height: 700px) {
+  .hero {
+    margin-top: 12px;
+  }
+
+  .tagline {
+    margin: 12px auto;
+  }
+
+  .features {
+    margin-top: 12px;
+  }
+
+  .cityline {
+    height: 35px;
+  }
+}

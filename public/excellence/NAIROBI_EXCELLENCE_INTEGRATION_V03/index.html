@@ -1,0 +1,466 @@
+<!-- J02.06.29.11.05 KPI ICONS -->
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>EDUKAI AFRICA | LongView Agent</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./nairobi-v03-api.js" defer></script>
+<script src="./app.js" defer></script>
+<script src="./nairobi-v03-learners.js" defer></script>
+<script src="./nairobi-v03-question-sync.js" defer></script>
+<script src="./nairobi-v03-kpi.js" defer></script>
+<script src="./nairobi-v03-chart.js" defer></script>
+<script src="./nairobi-v03-recommendations.js" defer></script>
+<script src="./nairobi-v03-analysis-ui.js" defer></script>
+  <script src="./nairobi-v03-longview-report.js" defer></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <img class="brand-logo" src="./assets/edukai_africa_logo.png" alt="EDUKAI AFRICA">
+      <div>
+        <strong>EDUKAI <span>AFRICA</span></strong>
+        <small>LongView Agent</small>
+      </div>
+    </div>
+
+
+
+    <nav class="navigation" aria-label="Navigation principale">
+  <button class="nav-item active" data-view="home"
+          data-i18n="navHome" type="button">
+    Nouvelle analyse
+  </button>
+  <button class="nav-item" data-view="dashboard"
+          data-i18n="navDashboard" type="button">
+    Tableau de bord
+  </button>
+  <button data-view="learners" class="nav-item" type="button"
+          data-i18n="navLearners">Apprenants</button>
+  <button data-view="trends" class="nav-item" type="button"
+          data-i18n="navTrends">Analyses &amp; Tendances</button>
+  <button data-view="recommendations" class="nav-item" type="button"
+          data-i18n="navRecommendations">Recommandations</button>
+  <button data-view="history" class="nav-item" type="button"
+          data-i18n="navHistory">Décisions &amp; Historique</button>
+  <button class="nav-item" data-view="reports" type="button"
+          data-i18n="navReports">Rapports</button>
+  <button data-view="admin" class="nav-item" type="button"
+          data-i18n="navAdmin">Session et environnement</button>
+</nav>
+
+    <div class="sidebar-footer">
+      <span data-i18n="humanValidation">
+        Validation humaine obligatoire
+      </span>
+      <small data-i18n="synthetic">
+        Données synthétiques
+      </small>
+      <small data-i18n="preview">
+        Prévisualisation graphique
+      </small>
+    </div>
+  </aside>
+
+  <div class="main-area">
+
+    <!-- J02.06.10 - ENTETE NAIROBI -->
+<header class="top-header nairobi-header">
+
+  <div class="nairobi-header-title">
+    <div class="nairobi-title-line">
+      <strong>LongView Agent</strong>
+      <span class="nairobi-separator">|</span>
+      <span data-i18n="subtitle">
+        Intelligence pédagogique longitudinale
+      </span>
+    </div>
+
+    <p data-i18n="headerDescription">
+      Analyse des apprentissages • Recommandations intelligentes • Décision humaine
+    </p>
+  </div>
+
+  <div class="nairobi-header-actions">
+
+    <div class="nairobi-demo-status">
+      <span aria-hidden="true">▣</span>
+      <div>
+        <strong data-i18n="demo">Mode Démonstration</strong>
+        <small data-i18n="synthetic">Données synthétiques</small>
+      </div>
+    </div>
+
+    <div class="nairobi-language-buttons" aria-label="Langue / Language">
+      <button type="button" id="nairobi-fr" class="nairobi-lang active"
+              aria-pressed="true">FR</button>
+      <button type="button" id="nairobi-en" class="nairobi-lang"
+              aria-pressed="false">EN</button>
+    </div>
+
+    <select id="language-select"
+            class="nairobi-hidden-select"
+            aria-label="Langue / Language"
+            tabindex="-1">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+
+    <div class="nairobi-teacher-menu" id="nairobi-teacher-menu">
+  <button class="nairobi-teacher nairobi-teacher-trigger"
+          id="nairobi-teacher-trigger"
+          type="button"
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-controls="nairobi-session-menu">
+    <span class="nairobi-avatar" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
+      </svg>
+    </span>
+    <span class="nairobi-teacher-text">
+      <strong data-i18n="teacherLabel">Enseignant</strong>
+      <small data-i18n="teacherDemo">Démonstration</small>
+    </span>
+    <span aria-hidden="true">⌄</span>
+  </button>
+
+  <div id="nairobi-session-menu"
+       class="nairobi-session-dropdown"
+       hidden>
+    <button id="nairobi-logout-button"
+            class="nairobi-logout-option"
+            type="button"
+            hidden>
+      <span aria-hidden="true">↪</span>
+      <span id="nairobi-logout-label">Déconnexion</span>
+    </button>
+  </div>
+</div>
+
+  </div>
+</header>
+
+    <main class="content">
+
+      <section id="home-view">
+
+        <div class="welcome-banner">
+  <!-- J02.06.15 - BANNIERE NAIROBI -->
+  <div class="banner-copy nairobi-banner-copy">
+    <h2 class="nairobi-banner-title">
+      <span id="nairobi-welcome-prefix">Bienvenue sur</span>
+      <span class="nairobi-edukai">EDUKAI</span>
+      <span class="nairobi-africa">AFRICA</span>
+    </h2>
+
+    <div class="nairobi-banner-subtitle">LongView Agent</div>
+
+<div class="edukai-convening-edition" style="margin-top:8px; font-size:13px; line-height:1.5; color:#B9F4F4;">
+  <div>Nairobi Agentic AI Convening</div>
+  <small lang="fr">Édition de démonstration</small>
+  <small lang="en">Demonstration Edition</small>
+</div>
+
+    <p class="nairobi-banner-description" data-i18n="welcomeText">
+      Analyse les apprentissages, identifie les besoins et propose
+      des recommandations pédagogiques personnalisées.
+    </p>
+  </div>
+
+  <div class="banner-art nairobi-banner-art" aria-hidden="true">
+    <img
+      class="banner-image nairobi-banner-image"
+      src="./assets/edukai_banniere_pedagogique.png"
+      alt=""
+      loading="eager">
+  </div>
+</div>
+
+        <!-- J02.06.27 - FINITIONS PANNEAUX -->
+<div class="home-grid">
+
+          <section class="panel analysis-panel">
+            <div class="panel-heading">
+              <span class="eyebrow" data-i18n="analysisLabel">
+                ANALYSE LONGITUDINALE
+              </span>
+              <h3 data-i18n="analysisTitle">
+                Analyse longitudinale
+              </h3>
+            </div>
+
+            <label class="nairobi-learner-label" for="learner-select"
+                   data-i18n="selectLearner">
+              Sélectionner un apprenant
+            </label>
+
+            <select id="learner-select">
+              <option value="" data-i18n="chooseLearner">
+                Choisir un dossier de démonstration
+              </option>
+              <option value="LRN001">
+                LRN001 — Aminata Camara
+              </option>
+              <option value="LRN004">
+                LRN004 — Ibrahima Keita
+              </option>
+            </select>
+
+            <label class="nairobi-question-label" for="longview-question"
+                   data-i18n="questionLabel">
+              Question à LongView
+            </label>
+
+            <textarea id="longview-question"
+                      rows="5"
+                      data-i18n-placeholder="questionPlaceholder"
+                      placeholder="Quelle est l'évolution pédagogique de cet apprenant ?">Analyse l'évolution scolaire de Ibrahima Keita sur les trois années disponibles. Identifie ses principales forces, ses difficultés éventuelles et propose des recommandations pédagogiques adaptées.</textarea>
+
+            <button class="primary-button analysis-action"
+                    type="button"
+                    disabled
+                    data-i18n="runAnalysis">
+              Lancer l'analyse
+            </button>
+            <button id="reset-analysis" class="secondary-button reset-action"
+                    type="button" data-i18n="resetAnalysis">
+              Réinitialiser
+            </button>
+
+            <p class="preview-note" data-i18n="inactiveNote">
+
+            </p>
+          </section>
+
+          <aside class="panel help-panel">
+            <h3 data-i18n="howTitle">
+              Comment ça marche ?
+            </h3>
+
+            <div class="help-step">
+              <span class="step-number">01</span>
+              <div class="nairobi-step-content">
+  <span class="nairobi-step-icon" aria-hidden="true">👥</span>
+  <p data-i18n="step1">
+                Sélectionner un apprenant
+              </p>
+  <small class="nairobi-step-description" lang="fr">Choisissez un apprenant dans la liste.</small>
+  <small class="nairobi-step-description" lang="en">Choose a learner from the list.</small>
+</div>
+            </div>
+
+            <div class="help-step">
+              <span class="step-number">02</span>
+              <div class="nairobi-step-content">
+  <span class="nairobi-step-icon" aria-hidden="true">▤</span>
+  <p data-i18n="step2">
+                Formuler une question pédagogique
+              </p>
+  <small class="nairobi-step-description" lang="fr">Formulez votre besoin d'analyse.</small>
+  <small class="nairobi-step-description" lang="en">Describe your analysis request.</small>
+</div>
+            </div>
+
+            <div class="help-step">
+              <span class="step-number">03</span>
+              <div class="nairobi-step-content">
+  <span class="nairobi-step-icon" aria-hidden="true">▥</span>
+  <p data-i18n="step3">
+                Examiner les résultats avec l'enseignant
+              </p>
+  <small class="nairobi-step-description" lang="fr">Visualisez les résultats et recommandations pédagogiques.</small>
+  <small class="nairobi-step-description" lang="en">View results and educational recommendations.</small>
+</div>
+            </div>
+          </aside>
+
+        </div>
+      </section>
+
+      <section id="dashboard-view" hidden>
+<!-- J02.06.29.05.02 NAIROBI DASHBOARD -->
+<div class="nd-page">
+
+<header class="nd-top">
+  <div>
+    <span class="nd-overline" data-nd-fr="SUIVI PÉDAGOGIQUE" data-nd-en="EDUCATIONAL MONITORING">SUIVI PÉDAGOGIQUE</span>
+    <h2 data-nd-fr="Tableau de bord analytique" data-nd-en="Analytics dashboard">Tableau de bord analytique</h2>
+    <p data-nd-fr="Analyse longitudinale et recommandations pédagogiques" data-nd-en="Longitudinal analysis and educational recommendations">Analyse longitudinale et recommandations pédagogiques</p>
+  </div>
+  <span class="nd-tag" data-nd-fr="Données synthétiques" data-nd-en="Synthetic data">Données synthétiques</span>
+</header>
+
+<!-- J02.06.29.09 COMPACT -->
+<div class="nd-overview">
+<!-- J02.06.29.10 PROFIL GUINEE -->
+<section class="nd-profile">
+  <div class="nd-avatar nd-avatar-photo"><img src="assets/edukai_aminata_portrait_synthetique.png" alt="Portrait synthétique illustratif du profil Aminata Camara"></div>
+  <div class="nd-profile-info">
+    <strong>Aminata Camara</strong>
+    <span class="nd-profile-identity"><span class="nd-id-badge">LRN001</span><span class="nd-country"><span class="nd-guinea-flag" role="img" aria-label="Guinée / Guinea"></span><span data-nairobi-fr="Guinée" data-nairobi-en="Guinea">Guinée</span></span></span>
+    <small data-nd-fr="Période : 2023–2026" data-nd-en="Period: 2023–2026">Période : 2023–2026</small>
+  </div>
+  <span class="nd-tag" data-nd-fr="Profil de démonstration" data-nd-en="Demonstration profile">Profil de démonstration</span>
+</section>
+<div class="nd-kpis">
+  <article class="nd-kpi">
+    <span class="nd-kpi-symbol nd-icon-purple"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16L16 5M7 5h9v9"/></svg></span>
+    <small data-nd-fr="Meilleure progression" data-nd-en="Strongest improvement">Meilleure progression</small>
+    <strong>+25 <em>pts</em></strong>
+    <p data-nd-fr="Mathématiques : 58 → 83" data-nd-en="Mathematics: 58 → 83">Mathématiques : 58 → 83</p>
+  </article>
+  <article class="nd-kpi">
+    <span class="nd-kpi-symbol nd-icon-green"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v7a5 5 0 0 1-10 0V4ZM7 6H4v3a4 4 0 0 0 4 4M17 6h3v3a4 4 0 0 1-4 4"/></svg></span>
+    <small data-nd-fr="Mathématiques 2025–2026" data-nd-en="Mathematics 2025–2026">Mathématiques 2025–2026</small>
+    <strong>83<em>/100</em></strong>
+    <p data-nd-fr="Dernier résultat" data-nd-en="Latest score">Dernier résultat</p>
+  </article>
+  <article class="nd-kpi">
+    <span class="nd-kpi-symbol nd-icon-blue"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="13" width="4" height="7" rx="1"/><rect x="10" y="9" width="4" height="11" rx="1"/><rect x="16" y="4" width="4" height="16" rx="1"/></svg></span>
+    <small data-nd-fr="Moyenne des 3 matières" data-nd-en="Average of 3 subjects">Moyenne des 3 matières</small>
+    <strong>78<em>/100</em></strong>
+    <p data-nd-fr="2025–2026 • arrondie" data-nd-en="2025–2026 • rounded">2025–2026 • arrondie</p>
+  </article>
+  <article class="nd-kpi">
+    <span class="nd-kpi-symbol nd-icon-orange"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 7-7 4 4 7-8M15 6h6v6"/></svg></span>
+    <small data-nd-fr="Progression de la moyenne" data-nd-en="Average score improvement">Progression de la moyenne</small>
+    <strong><span id="nd-average-progress">+13,3</span> <em>pts</em></strong>
+    <p data-nd-fr="Trois matières depuis 2023" data-nd-en="Three subjects since 2023">Trois matières depuis 2023</p>
+  </article>
+</div>
+</div>
+
+<div class="nd-tabs" role="tablist" aria-label="Dashboard sections">
+  <button type="button" class="nd-tab active" data-nd-tab="analysis" aria-selected="true" data-nd-fr="Analyse longitudinale" data-nd-en="Longitudinal analysis">Analyse longitudinale</button>
+  <button type="button" class="nd-tab" data-nd-tab="metrics" aria-selected="false" data-nd-fr="Indicateurs" data-nd-en="Indicators">Indicateurs</button>
+  <button type="button" class="nd-tab" data-nd-tab="subjects" aria-selected="false" data-nd-fr="Détails par matière" data-nd-en="Subject details">Détails par matière</button>
+</div>
+
+<div class="nd-tab-content" data-nd-panel="analysis">
+  <div class="nd-main-grid">
+    <section class="nd-card">
+      <h3 data-nd-fr="Évolution des résultats par matière (2023–2026)" data-nd-en="Subject performance over time (2023–2026)">Évolution des résultats par matière (2023–2026)</h3>
+      <div class="nd-legend">
+        <span><i style="background:#2563eb"></i><b data-nd-fr="Mathématiques" data-nd-en="Mathematics">Mathématiques</b></span>
+        <span><i style="background:#10a997"></i><b data-nd-fr="Sciences" data-nd-en="Science">Sciences</b></span>
+        <span><i style="background:#9864d7"></i><b data-nd-fr="Langues" data-nd-en="Languages">Langues</b></span>
+        <span><i style="background:#e6a13b"></i><b data-nd-fr="Assiduité" data-nd-en="Attendance">Assiduité</b></span>
+      </div>
+      <div id="nd-chart" class="nd-chart"></div>
+      <p class="nd-muted" data-nd-fr="Données synthétiques • Graphique illustratif" data-nd-en="Synthetic data • Illustrative chart">Données synthétiques • Graphique illustratif</p>
+    </section>
+
+    <section class="nd-card">
+      <h3 data-nd-fr="Principaux constats" data-nd-en="Key findings">Principaux constats</h3>
+      <div class="nd-finding green">
+        <strong data-nd-fr="Mathématiques : +25 points" data-nd-en="Mathematics: +25 points">Mathématiques : +25 points</strong>
+        <p data-nd-fr="Progression régulière de 58 à 83." data-nd-en="Steady improvement from 58 to 83.">Progression régulière de 58 à 83.</p>
+      </div>
+      <div class="nd-finding blue">
+        <strong data-nd-fr="Sciences : +12 points" data-nd-en="Science: +12 points">Sciences : +12 points</strong>
+        <p data-nd-fr="Évolution de 64 à 76." data-nd-en="Increase from 64 to 76.">Évolution de 64 à 76.</p>
+      </div>
+      <div class="nd-finding orange">
+        <strong data-nd-fr="Langues : +3 points" data-nd-en="Languages: +3 points">Langues : +3 points</strong>
+        <p data-nd-fr="Progression plus limitée, de 72 à 75." data-nd-en="More limited progress, from 72 to 75.">Progression plus limitée, de 72 à 75.</p>
+      </div>
+      <div class="nd-finding green">
+        <strong data-nd-fr="Assiduité : 93 %" data-nd-en="Attendance: 93%">Assiduité : 93 %</strong>
+        <p data-nd-fr="Amélioration de 88 % à 93 %." data-nd-en="Improvement from 88% to 93%.">Amélioration de 88 % à 93 %.</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="nd-tab-content" data-nd-panel="metrics" hidden>
+  <section class="nd-card">
+    <h3 data-nd-fr="Indicateurs par année" data-nd-en="Indicators by year">Indicateurs par année</h3>
+    <div class="nd-table-wrap">
+      <table class="nd-table">
+        <thead><tr><th data-nd-fr="Indicateur" data-nd-en="Indicator">Indicateur</th><th>2023–24</th><th>2024–25</th><th>2025–26</th></tr></thead>
+        <tbody>
+          <tr><td data-nd-fr="Mathématiques" data-nd-en="Mathematics">Mathématiques</td><td>58</td><td>71</td><td>83</td></tr>
+          <tr><td data-nd-fr="Sciences" data-nd-en="Science">Sciences</td><td>64</td><td>69</td><td>76</td></tr>
+          <tr><td data-nd-fr="Langues" data-nd-en="Languages">Langues</td><td>72</td><td>74</td><td>75</td></tr>
+          <tr><td data-nd-fr="Assiduité (%)" data-nd-en="Attendance (%)">Assiduité (%)</td><td>88</td><td>91</td><td>93</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="nd-tab-content" data-nd-panel="subjects" hidden>
+  <section class="nd-card">
+    <h3 data-nd-fr="Progression par matière" data-nd-en="Progress by subject">Progression par matière</h3>
+    <div class="nd-subject"><span data-nd-fr="Mathématiques" data-nd-en="Mathematics">Mathématiques</span><strong>+25 pts</strong><div><i style="width:83%;background:#2563eb"></i></div></div>
+    <div class="nd-subject"><span data-nd-fr="Sciences" data-nd-en="Science">Sciences</span><strong>+12 pts</strong><div><i style="width:76%;background:#10a997"></i></div></div>
+    <div class="nd-subject"><span data-nd-fr="Langues" data-nd-en="Languages">Langues</span><strong>+3 pts</strong><div><i style="width:75%;background:#9864d7"></i></div></div>
+  </section>
+</div>
+
+<div class="nd-main-grid nd-bottom">
+  <section class="nd-card" hidden style="display:none !important" aria-hidden="true">
+    <h3 data-nd-fr="Tendance IA (synthèse illustrative)" data-nd-en="AI trends (illustrative summary)">Tendance IA (synthèse illustrative)</h3>
+    <p class="nd-summary" data-nd-fr="Aminata présente une forte progression en mathématiques et une amélioration continue en sciences. Les langues progressent plus lentement et pourraient bénéficier d'un accompagnement ciblé." data-nd-en="Aminata shows strong progress in mathematics and steady improvement in science. Language results are improving more slowly and may benefit from targeted support.">Aminata présente une forte progression en mathématiques et une amélioration continue en sciences. Les langues progressent plus lentement et pourraient bénéficier d'un accompagnement ciblé.</p>
+    <p class="nd-muted" data-nd-fr="Synthèse rédigée pour la maquette, non générée par le moteur IA." data-nd-en="Mockup summary, not generated by the AI engine.">Synthèse rédigée pour la maquette, non générée par le moteur IA.</p>
+  </section>
+
+  <section class="nd-card" id="nd-recommendations-card">
+    <h3 data-nd-fr="Recommandations pédagogiques personnalisées"
+        data-nd-en="Personalized educational recommendations">
+      Recommandations pédagogiques personnalisées
+    </h3>
+    <p class="nd-muted" id="nd-recommendations-status"
+       aria-live="polite">
+      Chargement après analyse de l'apprenant.
+    </p>
+    <div id="nd-recommendations-list"></div>
+
+    <div id="nd-publication-controls" hidden>
+      <button
+        type="button"
+        id="nd-publish-recommendations"
+        class="nd-btn nd-btn-primary"
+        data-nd-fr="Soumettre pour validation humaine"
+        data-nd-en="Submit for human review"
+        disabled>
+        Soumettre pour validation humaine
+      </button>
+
+      <p
+        id="nd-publication-status"
+        class="nd-muted"
+        role="status"
+        aria-live="polite"></p>
+    </div>
+    <p
+  id="nd-review-history-notice"
+  class="nd-muted"
+  aria-live="polite">
+  Historique des validations en cours de chargement.
+</p>
+  </section>
+</div>
+
+
+
+</div>
+</section>
+</main>
+  </div>
+</div>
+  <script src="./nairobi-v03-logout.js" defer></script>
+<script src="./nairobi-v03-menu-navigation.js" defer></script>
+  <script src="./nairobi-v03-pages-v2.js" defer></script>
+</body>
+</html>

@@ -1,4 +1,23 @@
-﻿"use strict";
+"use strict";
+// EDUKAI_CLOUD_PATCH_V1
+if (process.env.EDUKAI_V03_MODE === "nairobi_cloud") {
+const { createCloudPool } =
+    require("../nairobi-cloud-config");
+
+const pool = createCloudPool();
+
+pool.on("error", error => {
+    console.error(
+        "[EDUKAI Cloud Pedagogie]",
+        error.message
+    );
+});
+
+module.exports = { pool };
+} else {
+"use strict";
+
+const { assertV03Database, getV03DatabaseMode } = require("../v03-database-mode");
 
 const fs = require("node:fs");
 const path = require("node:path");
@@ -7,7 +26,13 @@ const { Pool } = require("pg");
 
 const envPath = path.resolve(
   __dirname,
-  "../../.env.pedagogical-v03"
+  getV03DatabaseMode().mode === "jury"
+    ? "../../.env.pedagogical-v03.jury"
+    : getV03DatabaseMode().mode === "tests_grandeur_nature"
+      ? "../../.env.pedagogical-v03.tests-grandeur-nature"
+      : getV03DatabaseMode().mode === "nairobi_reset_test"
+        ? "../../.env.pedagogical-v03.nairobi-reset-test"
+        : "../../.env.pedagogical-v03"
 );
 
 const config = dotenv.parse(
@@ -31,11 +56,7 @@ for (const key of [
   }
 }
 
-if (config.PGDATABASE !== "edukai_longview_v03") {
-  throw new Error(
-    "EDUKAI pedagogie V0.3 : base non autorisee."
-  );
-}
+assertV03Database(config.PGDATABASE);
 
 if (config.PGUSER !== "edukai_app") {
   throw new Error(
@@ -73,3 +94,5 @@ pool.on("error", (error) => {
 });
 
 module.exports = { pool };
+
+}

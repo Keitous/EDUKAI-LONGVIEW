@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EDUKAI AFRICA | LongView Agent</title>
+<link rel="stylesheet" href="./nairobi-login.css">
+<script src="./nairobi-v03-api.js" defer></script>
+<script src="./nairobi-login.js" defer></script>
+</head>
+<body>
+<main class="login-layout">
+  <section class="brand-panel">
+    <div class="brand">
+      <div class="brand-symbol">◇</div>
+      <div>
+        <strong>EDUKAI AFRICA</strong>
+        <span>LongView Agent</span>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="academic-icon">◆</div>
+      <h1>LongView <em>Agent</em></h1>
+      <div class="hero-rule"></div>
+      <p class="eyebrow" data-fr="PLATEFORME D'INTELLIGENCE PÉDAGOGIQUE"
+         data-en="EDUCATIONAL INTELLIGENCE PLATFORM">
+         PLATEFORME D'INTELLIGENCE PÉDAGOGIQUE
+      </p>
+      <p class="tagline"
+         data-fr="L'intelligence artificielle au service de la réussite éducative"
+         data-en="Artificial intelligence supporting educational success">
+         L'intelligence artificielle au service de la réussite éducative
+      </p>
+    </div>
+
+    <div class="features">
+      <div><span>▥</span><b data-fr="Analyser" data-en="Analyze">Analyser</b></div>
+      <div><span>◎</span><b data-fr="Personnaliser" data-en="Personalize">Personnaliser</b></div>
+      <div><span>✦</span><b data-fr="Accompagner" data-en="Support">Accompagner</b></div>
+      <div><span>♧</span><b data-fr="Faire réussir" data-en="Empower">Faire réussir</b></div>
+    </div>
+
+    <div class="cityline" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </section>
+
+  <section class="form-side">
+    <div class="login-card">
+      <div class="language-row">
+        <label for="language-select">🌐</label>
+        <select id="language-select" aria-label="Language">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+
+      <div class="teacher-icon" aria-hidden="true">▣</div>
+
+      <h2 data-fr="Connexion enseignant"
+          data-en="Teacher sign in">Connexion enseignant</h2>
+
+      <p class="subtitle"
+         data-fr="Accédez à votre espace pédagogique LongView Agent"
+         data-en="Access your LongView Agent educational dashboard">
+         Accédez à votre espace pédagogique LongView Agent
+      </p>
+
+      <form id="login-form">
+        <label for="identifier"
+               data-fr="Identifiant"
+               data-en="Username">Identifiant</label>
+        <input id="identifier" name="identifier"
+               autocomplete="username" required maxlength="150">
+
+        <label for="password"
+               data-fr="Mot de passe"
+               data-en="Password">Mot de passe</label>
+        <div class="password-wrap">
+          <input id="password" name="password" type="password"
+                 autocomplete="current-password" required>
+          <button id="toggle-password" type="button"
+                  aria-label="Afficher le mot de passe">◉</button>
+        </div>
+
+        <button id="submit" class="submit" type="submit"
+                data-fr="Se connecter"
+                data-en="Sign in">Se connecter</button>
+      </form>
+
+      <p id="status" role="status" aria-live="polite"></p>
+
+      <div class="demo-note">
+        <span>ⓘ</span>
+        <p data-fr="Nairobi Agentic AI Convening — Édition de démonstration. Données synthétiques."
+           data-en="Nairobi Agentic AI Convening — Demonstration Edition. Synthetic data.">
+           Environnement de démonstration — Données synthétiques.
+           Nairobi Agentic AI Convening — Édition de démonstration — Données synthétiques — Port 3006.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

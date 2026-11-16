@@ -1,3 +1,6 @@
+const {
+  getLongViewMcpServer
+} = require("./longview-mcp-selection-v03");
 const { connectExternalMCP } = require("./external-mcp");
 const Groq = require("groq-sdk");
 const { Client } = require("@modelcontextprotocol/sdk/client/index.js");
@@ -31,7 +34,7 @@ function mcpToolsToGroq(mcpTools) {
     }));
 }
 
-async function runLLMAgent(question) {
+async function runLLMAgent(question, options = {}) {
   const config = getLLMConfig();
 const auditSession = createAuditSession({
   question,
@@ -62,7 +65,7 @@ addAuditEvent(
 
   const transport = new StdioClientTransport({
     command: "node",
-    args: ["src/mcp-server.js"]
+    args: [getLongViewMcpServer(options)]
   });
 
   const mcpClient = new Client({

@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 const {
   withV03Transaction
@@ -51,8 +51,12 @@ async function submitPedagogicalReview(data) {
   validateId(id_enseignant, "id_enseignant");
   validateTeacherDecision(decision, contenu_modifie);
 
-  if (commentaire !== null && typeof commentaire !== "string") {
-    throw new TypeError("Commentaire invalide.");
+  if (
+    typeof commentaire !== "string" ||
+    commentaire.trim() === "" ||
+    commentaire.length > 2000
+  ) {
+    throw new TypeError("Commentaire obligatoire ou invalide.");
   }
 
   if (

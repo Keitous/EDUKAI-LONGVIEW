@@ -39,6 +39,9 @@ const {
   createPedagogicalTranslationRouter
 } = require("./pedagogical-translation-router-v03");
 
+const {
+  createLongViewAnalysisRouterV03
+} = require("./longview-analysis-router-v03");
 function requireAuthenticatedTeacher(req, res, next) {
   const auth = req.session?.auth;
 
@@ -84,6 +87,10 @@ function createV03App() {
   app.use("/api/v03", createV03SessionMiddleware());
   app.use("/api/v03", createV03TeacherLoginRouter());
   app.use("/api/v03", createV03LearnerRouter());
+  app.use(
+    "/api/v03",
+    createLongViewAnalysisRouterV03()
+  );
 
   app.use(
     "/api/v03",

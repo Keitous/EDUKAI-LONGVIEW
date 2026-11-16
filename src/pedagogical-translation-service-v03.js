@@ -1,6 +1,20 @@
 "use strict";
 
-require("dotenv").config();
+const fs = require("node:fs");
+const path = require("node:path");
+const dotenv = require("dotenv");
+
+const envPath = path.resolve(__dirname, "../.env");
+
+if (fs.existsSync(envPath)) {
+  const env = dotenv.parse(fs.readFileSync(envPath));
+
+  for (const name of ["GROQ_API_KEY", "LLM_MODEL"]) {
+    if (process.env[name] === undefined && env[name] !== undefined) {
+      process.env[name] = env[name];
+    }
+  }
+}
 
 const Groq = require("groq-sdk");
 

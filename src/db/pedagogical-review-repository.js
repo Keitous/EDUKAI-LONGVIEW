@@ -2,7 +2,9 @@
 
 const { pool } = require("./postgres-pedagogical-v03");
 
-const V03_DATABASE = "edukai_longview_v03";
+const { getV03DatabaseMode } = require("../v03-database-mode");
+
+const V03_DATABASE = getV03DatabaseMode().database;
 
 function verifyV03Configuration() {
   if (
