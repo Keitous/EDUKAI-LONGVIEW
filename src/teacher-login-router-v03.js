@@ -128,7 +128,12 @@ function createV03TeacherLoginRouter() {
         nairobi_reset_test: "http://127.0.0.1:3006"
       };
 
-      if (!origines[mode] || parsed.origin !== origines[mode]) {
+      const origineAutorisee =
+        mode === "nairobi_cloud"
+          ? process.env.EDUKAI_PUBLIC_ORIGIN
+          : origines[mode];
+
+      if (!origineAutorisee || parsed.origin !== origineAutorisee) {
         return res.status(403).json({
           error: "Origine non autorisee."
         });
@@ -153,12 +158,14 @@ function createV03TeacherLoginRouter() {
             ? "edukai.v03.jury.sid"
             : mode === "nairobi_reset_test"
               ? "edukai.v03.nairobi.sid"
-              : "edukai.v03.sid";
+              : mode === "nairobi_cloud"
+                ? "edukai.v03.cloud.sid"
+                : "edukai.v03.sid";
 
       res.clearCookie(cookieName, {
         path: "/api/v03",
         httpOnly: true,
-        secure: false,
+        secure: mode === "nairobi_cloud",
         sameSite: "strict"
       });
 
