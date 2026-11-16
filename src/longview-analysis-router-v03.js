@@ -36,7 +36,11 @@ function createLongViewAnalysisRouterV03() {
         });
       }
 
-      if (process.env.EDUKAI_V03_MODE !== "nairobi_reset_test") {
+      if (
+        !["nairobi_reset_test", "nairobi_cloud"].includes(
+          process.env.EDUKAI_V03_MODE
+        )
+      ) {
         return res.status(503).json({
           success: false,
           error: "Mode Nairobi non autorise."
