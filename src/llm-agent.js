@@ -560,6 +560,17 @@ if (toolName === "read_pedagogical_guidance") {
   toolResult = await externalMCP.readGuidance();
 
 } else if (internalAllowedTools.has(toolName)) {
+  if (options.mode === "nairobi_v03") {
+    if (
+      typeof options.authorizedLearnerId !== "string" ||
+      !args ||
+      typeof args !== "object" ||
+      Array.isArray(args) ||
+      args.learnerId !== options.authorizedLearnerId
+    ) {
+      throw new Error("MCP learner access denied.");
+    }
+  }
   toolResult = await mcpClient.callTool({
     name: toolName,
     arguments: args

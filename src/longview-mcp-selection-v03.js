@@ -6,7 +6,11 @@ function getLongViewMcpServer(options = {}) {
   const mode = options.mode || "legacy";
 
   if (mode === "nairobi_v03") {
-    if (process.env.EDUKAI_V03_MODE !== "nairobi_reset_test") {
+    if (
+      !["nairobi_reset_test", "nairobi_cloud"].includes(
+        process.env.EDUKAI_V03_MODE
+      )
+    ) {
       throw new Error(
         "Nairobi V0.3 : environnement non autorise."
       );

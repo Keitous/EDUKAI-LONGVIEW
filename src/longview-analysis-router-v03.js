@@ -102,7 +102,8 @@ function createLongViewAnalysisRouterV03() {
       ].join("\n");
 
       const analysis = await runLLMAgent(agentQuestion, {
-        mode: "nairobi_v03"
+        mode: "nairobi_v03",
+        authorizedLearnerId: learnerId
       });
 
       return res.json({
