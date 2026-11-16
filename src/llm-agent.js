@@ -63,9 +63,26 @@ addAuditEvent(
     apiKey: config.apiKey
   });
 
+  const mcpEnvironment = {};
+
+  for (const key of [
+    "EDUKAI_V03_MODE",
+    "PGHOST",
+    "PGPORT",
+    "PGDATABASE",
+    "PGUSER",
+    "PGPASSWORD",
+    "PGSSLMODE"
+  ]) {
+    if (process.env[key] !== undefined) {
+      mcpEnvironment[key] = process.env[key];
+    }
+  }
+
   const transport = new StdioClientTransport({
-    command: "node",
-    args: [getLongViewMcpServer(options)]
+    command: process.execPath,
+    args: [getLongViewMcpServer(options)],
+    env: mcpEnvironment
   });
 
   const mcpClient = new Client({
